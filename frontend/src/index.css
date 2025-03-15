@@ -1,6 +1,50 @@
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap');
+
 @import "tailwindcss";
 
 @plugin "tailwindcss-animate";
+
+body {
+  font-family: 'Geist', sans-serif;
+}
+
+@theme {
+  --color-denim-50: #eff7ff;
+  --color-denim-100: #daedff;
+  --color-denim-200: #bde1ff;
+  --color-denim-300: #90cfff;
+  --color-denim-400: #5bb4ff;
+  --color-denim-500: #3594fc;
+  --color-denim-600: #1f75f1;
+  --color-denim-700: #175ddc;
+  --color-denim-800: #194cb4;
+  --color-denim-900: #1b438d;
+  --color-denim-950: #152a56;
+
+  --color-arapawa-50: #f1f5ff;
+  --color-arapawa-100: #e6edff;
+  --color-arapawa-200: #d0deff;
+  --color-arapawa-300: #a9bfff;
+  --color-arapawa-400: #7995ff;
+  --color-arapawa-500: #4360ff;
+  --color-arapawa-600: #1d33ff;
+  --color-arapawa-700: #0b20f6;
+  --color-arapawa-800: #091bce;
+  --color-arapawa-900: #0a18a8;
+  --color-arapawa-950: #020f66;
+
+  --color-white-50: #ffffff;
+  --color-white-100: #efefef;
+  --color-white-200: #dcdcdc;
+  --color-white-300: #bdbdbd;
+  --color-white-400: #989898;
+  --color-white-500: #7c7c7c;
+  --color-white-600: #656565;
+  --color-white-700: #525252;
+  --color-white-800: #464646;
+  --color-white-900: #3d3d3d;
+  --color-white-950: #292929;
+}
 
 @custom-variant dark (&:is(.dark *));
 
