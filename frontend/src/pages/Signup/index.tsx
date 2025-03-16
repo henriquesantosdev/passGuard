@@ -59,7 +59,7 @@ export const Signup = () => {
               className="text-arapawa-950 border-arapawa-200 h-12"
             />
           </div>
-          <span className="text-gray-500">Already have a account? <Link to="/signin" className="text-arapawa-900 underline hover:text-arapawa-700">Signin</Link></span>
+          <span className="text-gray-500">Already have a account? <Link to="/" className="text-arapawa-900 underline hover:text-arapawa-700">Signin</Link></span>
 
           <Button className="w-full mt-6 h-12 text-lg cursor-pointer bg-arapawa-950 hover:bg-arapawa-900">Signup</Button>
         </form>
