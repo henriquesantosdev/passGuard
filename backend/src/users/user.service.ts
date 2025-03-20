@@ -7,10 +7,14 @@ import {
 import { CreateUserDto } from './dto/create-user.dto';
 import { PrismaClient } from '@prisma/client';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { HashingServiceProtocol } from 'src/auth/hash/hashing.service';
 
 @Injectable()
 export class UserService {
-  constructor(private prisma: PrismaClient) {}
+  constructor(
+    private prisma: PrismaClient,
+    private readonly hashingService: HashingServiceProtocol,
+  ) {}
 
   async getUsers() {
     try {
@@ -44,10 +48,14 @@ export class UserService {
 
   async createUser(createUserDto: CreateUserDto) {
     try {
+      const passwordHash = await this.hashingService.hash(
+        createUserDto.password,
+      );
+
       const user = await this.prisma.user.create({
         data: {
           email: createUserDto.email,
-          password: createUserDto.password,
+          password: passwordHash,
         },
       });
 
@@ -73,17 +81,47 @@ export class UserService {
 
   async updateUser(id: string, updateUserDto: UpdateUserDto) {
     try {
+      const user = await this.prisma.user.findFirst({
+        where: {
+          id,
+        },
+      });
+
+      if (!user) {
+        throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+      }
+
+      const newDataUser: {
+        email?: string;
+        password?: string;
+      } = {
+        email: updateUserDto.email || user.email,
+      };
+
+      if (updateUserDto?.password) {
+        const newPasswordHash = await this.hashingService.hash(
+          updateUserDto.password,
+        );
+        newDataUser['password'] = newPasswordHash;
+      }
+
       const updated = await this.prisma.user.update({
         where: {
           id,
         },
         data: {
-          email: updateUserDto.email,
-          password: updateUserDto.password,
+          email: newDataUser.email,
+          password: newDataUser?.password || user?.password,
         },
       });
 
-      return updated;
+      return {
+        statusCode: 200,
+        message: 'User updated',
+        data: {
+          updated,
+        },
+      };
     } catch {
       return new HttpException(
         'Unable to register user',
@@ -110,7 +148,11 @@ export class UserService {
         },
       });
 
-      return deleted;
+      return {
+        statusCode: 200,
+        message: 'Use deleted',
+        data: deleted,
+      };
     } catch {
       return new HttpException('Unable to delete user', HttpStatus.BAD_REQUEST);
     }
