@@ -13,6 +13,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { AuthTokenGuard } from 'src/auth/guard/auth-token.guard';
 import { TokenPayloadParam } from 'src/auth/param/token-payload.param';
 import { TokenPayloadDto } from 'src/auth/dto/token-payload.dto';
+import { Public } from 'src/auth/guard/isPublic';
 
 @Controller('users')
 export class UserController {
@@ -29,6 +30,7 @@ export class UserController {
     return this.userService.getUser(id);
   }
 
+  @Public()
   @Post()
   createUser(@Body() createUserDto: CreateUserDto) {
     return this.userService.createUser(createUserDto);

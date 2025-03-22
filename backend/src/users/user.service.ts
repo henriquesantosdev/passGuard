@@ -19,7 +19,11 @@ export class UserService {
 
   async getUsers() {
     try {
-      const users = await this.prisma.user.findMany();
+      const users = await this.prisma.user.findMany({
+        include: {
+          Vaults: true,
+        },
+      });
       return users;
     } catch {
       return new HttpException(
@@ -34,6 +38,9 @@ export class UserService {
       const user = await this.prisma.user.findFirst({
         where: {
           id,
+        },
+        include: {
+          Vaults: true,
         },
       });
 
