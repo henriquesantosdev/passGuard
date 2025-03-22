@@ -5,14 +5,15 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
-import { PrismaClient } from '@prisma/client';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { HashingServiceProtocol } from 'src/auth/hash/hashing.service';
+import { PrismaService } from 'src/prisma/prisma.service';
+import { TokenPayloadDto } from 'src/auth/dto/token-payload.dto';
 
 @Injectable()
 export class UserService {
   constructor(
-    private prisma: PrismaClient,
+    private prisma: PrismaService,
     private readonly hashingService: HashingServiceProtocol,
   ) {}
 
@@ -79,16 +80,23 @@ export class UserService {
     }
   }
 
-  async updateUser(id: string, updateUserDto: UpdateUserDto) {
+  async updateUser(
+    updateUserDto: UpdateUserDto,
+    tokenPayload: TokenPayloadDto,
+  ) {
     try {
       const user = await this.prisma.user.findFirst({
         where: {
-          id,
+          id: tokenPayload.sub,
         },
       });
 
       if (!user) {
         throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+      }
+
+      if (user.id !== tokenPayload.sub) {
+        throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
       }
 
       const newDataUser: {
@@ -107,7 +115,7 @@ export class UserService {
 
       const updated = await this.prisma.user.update({
         where: {
-          id,
+          id: tokenPayload.sub,
         },
         data: {
           email: newDataUser.email,
@@ -130,11 +138,11 @@ export class UserService {
     }
   }
 
-  async deleteUser(id: string) {
+  async deleteUser(tokenPayload: TokenPayloadDto) {
     try {
       const user = await this.prisma.user.findUnique({
         where: {
-          id,
+          id: tokenPayload.sub,
         },
       });
 
@@ -142,9 +150,13 @@ export class UserService {
         return new HttpException('User not found', HttpStatus.NOT_FOUND);
       }
 
+      if (user.id !== tokenPayload.sub) {
+        throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
+      }
+
       const deleted = await this.prisma.user.delete({
         where: {
-          id,
+          id: tokenPayload.sub,
         },
       });
 
