@@ -11,11 +11,15 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { useAuth } from "@/contexts/hooks/useAuth"
 
 
 export const Header = () => {
+
+  const { signOut } = useAuth()
+
   return (
-    <nav className="bg-denim-700 p-4 rounded-full flex items-center justify-between px-10">
+    <nav className="bg-denim-700 p-4 rounded-md flex items-center justify-between px-10">
       <div>
         <h3
           className="text-2xl text-denim-100 font-bold flex gap-2">
@@ -45,7 +49,7 @@ export const Header = () => {
           </DropdownMenuContent>
         </DropdownMenu>
 
-        <Button className="cursor-pointer text-white bg-red-900 border-[2px] border-red-800 hover:bg-red-950">
+        <Button onClick={signOut} className="cursor-pointer text-white bg-red-900 border-[2px] border-red-800 hover:bg-red-950">
           <LogOut />
           Logout
         </Button>

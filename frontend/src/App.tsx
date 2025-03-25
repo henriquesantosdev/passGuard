@@ -1,18 +1,23 @@
 import { Route, Routes } from 'react-router-dom'
-import { ErrorNotFound } from './pages/Error-not-found'
 import { Signin } from './pages/Signin'
 import { Signup } from './pages/Signup'
 import { Dashboard } from './pages/Dashboard'
+import AuthProvider from './contexts/auth/AuthProvider'
+import PrivateRoutes from './pages/Private-routes'
 
 function App() {
 
   return (
-    <Routes>
-      <Route path='/' element={<Signin/>} />
-      <Route path='/signup' element={<Signup/>} />
-      <Route path='/dashboard' element={<Dashboard/>} />
-      <Route path='*' element={<ErrorNotFound/>} />
-    </Routes>
+    <AuthProvider>
+      <Routes>
+        <Route path='/' element={<Signin />} />
+        <Route path='/signup' element={<Signup />} />
+        <Route element={<PrivateRoutes />}>
+          <Route path='/dashboard' element={<Dashboard />} />
+        </Route>
+        <Route path='*' element={<Signin />} />
+      </Routes>
+    </AuthProvider>
   )
 }
 

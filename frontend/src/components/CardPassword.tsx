@@ -12,9 +12,13 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { Input } from "./ui/input"
+import { Vault } from "@/contexts/vaults/vaultsContext"
 
+interface VaultDataInterface {
+  vaultData: Vault
+}
 
-export const CardPassword = () => {
+export const VaultCard = ({ vaultData }: VaultDataInterface) => {
   return (
     <div className="bg-white flex gap-4 p-4 rounded-md">
       <div className="flex h-[80px]">
@@ -22,19 +26,19 @@ export const CardPassword = () => {
       </div>
       <div className="w-full">
         <div className="flex justify-between">
-          <p className="text-denim-900 text-2xl font-bold">Service name</p>
+          <p className="text-denim-900 text-2xl font-bold">{vaultData.service_name}</p>
 
           <Dialog>
             <DialogTrigger>
-              <Button className="bg-denim-50 hover:bg-denim-100 cursor-pointer">
-                <Bolt className="text-denim-900" />
-              </Button>
+              <div className="bg-denim-50 hover:bg-denim-100 cursor-pointer p-2 rounded">
+                <Bolt className="text-denim-900 size-5" />
+              </div>
             </DialogTrigger>
             <DialogContent>
 
               <DialogHeader>
                 <DialogTitle className="text-denim-950 flex justify-between items-center">
-                  Service name
+                  { vaultData.service_name }
                   <DialogClose asChild>
                     <Button className="bg-white shadow-none hover:bg-denim-100 cursor-pointer">
                       <X className="text-denim-900" />
@@ -47,11 +51,11 @@ export const CardPassword = () => {
               </DialogHeader>
 
               <form className="flex flex-col gap-2">
-                <Input className="h-12" placeholder="Email" defaultValue={"serviceemail@domain.com"} />
-                <Input className="h-12" placeholder="Username" defaultValue={"User Name"} />
+                <Input className="h-12" placeholder="Email" defaultValue={vaultData?.email || ''} />
+                <Input className="h-12" placeholder="Username" defaultValue={vaultData?.username || ''} />
                 <div className="flex items-center gap-2">
-                  <Input className="h-12" placeholder="password" defaultValue={"**************"} />
-                  <Button className="h-12 w-12 bg-white shadow-none hover:bg-denim-100 cursor-pointer">
+                  <Input className="h-12" placeholder="password" defaultValue={vaultData.password} />
+                  <Button type="button" className="h-12 w-12 bg-white shadow-none hover:bg-denim-100 cursor-pointer">
                     <EyeOff className="text-denim-900" />
                   </Button>
                 </div>
@@ -65,10 +69,10 @@ export const CardPassword = () => {
           </Dialog>
 
         </div>
-        <p className="text-denim-900">serviceemail@domain.com</p>
+        <p className="text-denim-900">{vaultData.email}</p>
         <div className="text-denim-900 flex items-center justify-between">
           <div className="flex items-center justify-center gap-2">
-            <p>****************</p>
+            <p>{vaultData.password}</p>
             <Button className="bg-denim-50 hover:bg-denim-100 cursor-pointer">
               <EyeOff className="text-denim-900" />
             </Button>
