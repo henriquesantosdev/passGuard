@@ -24,7 +24,7 @@ model User {
 model Vault {
   id           String   @id @default(uuid())
   service_name String
-  email        String   @unique
+  email        String
   username     String
   password     String
   user         User     @relation(fields: [userId], references: [id])
