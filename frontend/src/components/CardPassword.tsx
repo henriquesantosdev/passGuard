@@ -1,6 +1,8 @@
-import { Bolt, Copy, EyeOff, ShieldCheck, X } from "lucide-react"
+import { Bolt, Copy, Eye, EyeOff, Lock, Mail, ShieldCheck, UserRound, X } from "lucide-react"
 
 import { Button } from "./ui/button"
+
+import { Bounce, toast } from 'react-toastify'
 
 import {
   Dialog,
@@ -13,12 +15,35 @@ import {
 } from "@/components/ui/dialog"
 import { Input } from "./ui/input"
 import { Vault } from "@/contexts/vaults/vaultsContext"
+import { useState } from "react"
 
 interface VaultDataInterface {
   vaultData: Vault
 }
 
 export const VaultCard = ({ vaultData }: VaultDataInterface) => {
+  const [showPassword, setShowPassword] = useState(false)
+
+  const handleCopyToClipBoard = (password: string) => {
+    navigator.clipboard.writeText(password)
+
+    toast.success('password copied to clipboard!', {
+      position: "bottom-right",
+      autoClose: 2000,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+      transition: Bounce,
+    });
+  }
+
+  const handleShowPassword = () => {
+    return showPassword ? setShowPassword(false) : setShowPassword(true)
+  }
+
   return (
     <div className="bg-white flex gap-4 p-4 rounded-md">
       <div className="flex h-[80px]">
@@ -31,14 +56,14 @@ export const VaultCard = ({ vaultData }: VaultDataInterface) => {
           <Dialog>
             <DialogTrigger>
               <div className="bg-denim-50 hover:bg-denim-100 cursor-pointer p-2 rounded">
-                <Bolt className="text-denim-900 size-5" />
+                <Bolt className="text-denim-900 size-4" />
               </div>
             </DialogTrigger>
             <DialogContent>
 
               <DialogHeader>
                 <DialogTitle className="text-denim-950 flex justify-between items-center">
-                  { vaultData.service_name }
+                  {vaultData.service_name}
                   <DialogClose asChild>
                     <Button className="bg-white shadow-none hover:bg-denim-100 cursor-pointer">
                       <X className="text-denim-900" />
@@ -51,8 +76,8 @@ export const VaultCard = ({ vaultData }: VaultDataInterface) => {
               </DialogHeader>
 
               <form className="flex flex-col gap-2">
-                <Input className="h-12" placeholder="Email" defaultValue={vaultData?.email || ''} />
-                <Input className="h-12" placeholder="Username" defaultValue={vaultData?.username || ''} />
+                <Input className="h-12" placeholder="Email" defaultValue={vaultData?.email} />
+                <Input className="h-12" placeholder="Username" defaultValue={vaultData?.username} />
                 <div className="flex items-center gap-2">
                   <Input className="h-12" placeholder="password" defaultValue={vaultData.password} />
                   <Button type="button" className="h-12 w-12 bg-white shadow-none hover:bg-denim-100 cursor-pointer">
@@ -67,16 +92,36 @@ export const VaultCard = ({ vaultData }: VaultDataInterface) => {
 
             </DialogContent>
           </Dialog>
-
         </div>
-        <p className="text-denim-900">{vaultData.email}</p>
-        <div className="text-denim-900 flex items-center justify-between">
-          <div className="flex items-center justify-center gap-2">
-            <p>{vaultData.password}</p>
-            <Button className="bg-denim-50 hover:bg-denim-100 cursor-pointer">
-              <EyeOff className="text-denim-900" />
+
+        <div className="flex items-center mt-2 gap-2 text-denim-900">
+          <Mail className="size-4" />
+          <p className="text-denim-900">{vaultData?.email == "" ? 'Email not defined' : vaultData?.email}</p>
+        </div>
+        <div className="flex items-center gap-2 text-denim-900">
+          <UserRound className="size-4" />
+          <p>{vaultData?.username == "" ? 'Username not defined' : vaultData?.username}</p>
+        </div>
+
+        <div className="mt-2 flex text-denim-900 items-center justify-between w-full gap-2 border border-denim-100 rounded-md p-2">
+          <div className="flex items-center gap-2">
+            <Lock className="size-4" />
+            {showPassword ? (
+              <p>{vaultData.password}</p>
+            ) : (
+              <p>********************</p>
+            )}
+          </div>
+
+          <div>
+            <Button onClick={handleShowPassword} className="bg-denim-50 me-2 hover:bg-denim-100 cursor-pointer">
+              {showPassword ? (
+                <EyeOff className="text-denim-900" />
+              ) : (
+                <Eye className="text-denim-900" />
+              )}
             </Button>
-            <Button className="bg-denim-50 hover:bg-denim-100 cursor-pointer">
+            <Button onClick={() => handleCopyToClipBoard(vaultData.password)} className="bg-denim-50 hover:bg-denim-100 cursor-pointer">
               <Copy className="text-denim-900" />
             </Button>
           </div>

@@ -1,11 +1,10 @@
-import { IsEmail, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class CreateVaultDto {
   @IsNotEmpty()
   @IsString()
   service_name: string;
   @IsString()
-  @IsEmail()
   @IsOptional()
   email?: string;
   @IsOptional()

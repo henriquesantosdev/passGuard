@@ -11,8 +11,16 @@ export interface Vault {
 
 export interface VaultContextType {
   getVaults: () => void;
+  createVault: (data: CreateVaultType) => void;
   loading: boolean;
   vaults: Vault[]
+}
+
+export type CreateVaultType = {
+  service_name: string,
+  email?: string,
+  username?: string,
+  password: string
 }
 
 export const VaultsContext = createContext<VaultContextType | undefined>(undefined)
