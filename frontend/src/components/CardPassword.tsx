@@ -1,30 +1,19 @@
-import { Bolt, Copy, Eye, EyeOff, Lock, Mail, ShieldCheck, UserRound, X } from "lucide-react"
+import { Copy, Eye, EyeOff, Lock, Mail, ShieldCheck, UserRound } from "lucide-react"
 
 import { Button } from "./ui/button"
 
 import { Bounce, toast } from 'react-toastify'
 
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"
-import { Input } from "./ui/input"
 import { Vault } from "@/contexts/vaults/vaultsContext"
 import { useState } from "react"
-import { useVaults } from "@/contexts/hooks/useVaults"
+import { CardPasswordDialog } from "./CardPasswordDialog"
 
 interface VaultDataInterface {
   vaultData: Vault
 }
 
 export const VaultCard = ({ vaultData }: VaultDataInterface) => {
-  const { deleteVault } = useVaults()
-  
+
   const [showPassword, setShowPassword] = useState(false)
 
   const handleCopyToClipBoard = (password: string) => {
@@ -47,10 +36,6 @@ export const VaultCard = ({ vaultData }: VaultDataInterface) => {
     return showPassword ? setShowPassword(false) : setShowPassword(true)
   }
 
-  const handleDeleteVault = (vaultId: string) => {
-    deleteVault(vaultId)
-  }
-
   return (
     <div className="bg-white flex gap-4 p-4 rounded-md">
       <div className="flex h-[80px]">
@@ -60,45 +45,8 @@ export const VaultCard = ({ vaultData }: VaultDataInterface) => {
         <div className="flex justify-between">
           <p className="text-denim-900 text-2xl font-bold">{vaultData.service_name}</p>
 
-          <Dialog>
-            <DialogTrigger>
-              <div className="bg-denim-50 hover:bg-denim-100 cursor-pointer p-2 rounded">
-                <Bolt className="text-denim-900 size-4" />
-              </div>
-            </DialogTrigger>
-            <DialogContent>
+          <CardPasswordDialog vaultData={vaultData}/>
 
-              <DialogHeader>
-                <DialogTitle className="text-denim-950 flex justify-between items-center">
-                  {vaultData.service_name}
-                  <DialogClose asChild>
-                    <Button className="bg-white shadow-none hover:bg-denim-100 cursor-pointer">
-                      <X className="text-denim-900" />
-                    </Button>
-                  </DialogClose>
-                </DialogTitle>
-                <DialogDescription>
-                  You can see more about your saved access from the service
-                </DialogDescription>
-              </DialogHeader>
-
-              <form className="flex flex-col gap-2">
-                <Input className="h-12" placeholder="Email" defaultValue={vaultData?.email} />
-                <Input className="h-12" placeholder="Username" defaultValue={vaultData?.username} />
-                <div className="flex items-center gap-2">
-                  <Input className="h-12" placeholder="password" defaultValue={vaultData.password} />
-                  <Button type="button" className="h-12 w-12 bg-white shadow-none hover:bg-denim-100 cursor-pointer">
-                    <EyeOff className="text-denim-900" />
-                  </Button>
-                </div>
-                <div className="flex gap-2">
-                  <Button className="h-10 w-6/12 bg-denim-800 cursor-pointer hover:bg-denim-700">Edit</Button>
-                  <Button type="button" onClick={() => handleDeleteVault(vaultData.id)} variant="ghost" className="h-10 w-6/12 cursor-pointer text-red-800 hover:bg-red-800/10 hover:text-red-800">Delete</Button>
-                </div>
-              </form>
-
-            </DialogContent>
-          </Dialog>
         </div>
 
         <div className="flex items-center mt-2 gap-2 text-denim-900">
