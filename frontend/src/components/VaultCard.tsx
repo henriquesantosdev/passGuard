@@ -6,7 +6,7 @@ import { Bounce, toast } from 'react-toastify'
 
 import { Vault } from "@/contexts/vaults/vaultsContext"
 import { useState } from "react"
-import { CardPasswordDialog } from "./CardPasswordDialog"
+import { VaultConfigDialog } from "./CardPasswordDialog"
 
 interface VaultDataInterface {
   vaultData: Vault
@@ -45,7 +45,7 @@ export const VaultCard = ({ vaultData }: VaultDataInterface) => {
         <div className="flex justify-between">
           <p className="text-denim-900 text-2xl font-bold">{vaultData.service_name}</p>
 
-          <CardPasswordDialog vaultData={vaultData}/>
+          <VaultConfigDialog vaultData={vaultData}/>
 
         </div>
 

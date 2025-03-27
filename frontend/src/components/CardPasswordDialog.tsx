@@ -11,7 +11,7 @@ interface VaultDataInterface {
   vaultData: Vault
 }
 
-export const CardPasswordDialog = ({ vaultData }: VaultDataInterface) => {
+export const VaultConfigDialog = ({ vaultData }: VaultDataInterface) => {
   const { deleteVault } = useVaults()
 
   const [showPasswordDialog, setShowPasswordDialog] = useState<'password' | 'text'>('password')

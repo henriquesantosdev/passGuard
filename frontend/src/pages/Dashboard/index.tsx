@@ -1,5 +1,5 @@
 import { CardCreateVault } from "@/components/CardCreateVault"
-import { VaultCard } from "@/components/CardPassword"
+import { VaultCard } from "@/components/VaultCard"
 import { DetailsBarPassword } from "@/components/DetailsBarPassword"
 import { Header } from "@/components/Header"
 import { Button } from "@/components/ui/button"
@@ -17,7 +17,7 @@ export const Dashboard = () => {
   }, [getVaults])
 
   return (
-    <main className="bg-arapawa-50 p-4">
+    <main className="bg-arapawa-50 min-h-screen p-4">
       <ToastContainer />
       <div className="w-full lg:max-w-8/12 mx-auto">
         <Header />
