@@ -12,6 +12,7 @@ export interface Vault {
 export interface VaultContextType {
   getVaults: () => void;
   createVault: (data: CreateVaultType) => void;
+  deleteVault: (vaultId: string) => void,
   loading: boolean;
   vaults: Vault[]
 }

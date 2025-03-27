@@ -16,12 +16,15 @@ import {
 import { Input } from "./ui/input"
 import { Vault } from "@/contexts/vaults/vaultsContext"
 import { useState } from "react"
+import { useVaults } from "@/contexts/hooks/useVaults"
 
 interface VaultDataInterface {
   vaultData: Vault
 }
 
 export const VaultCard = ({ vaultData }: VaultDataInterface) => {
+  const { deleteVault } = useVaults()
+  
   const [showPassword, setShowPassword] = useState(false)
 
   const handleCopyToClipBoard = (password: string) => {
@@ -42,6 +45,10 @@ export const VaultCard = ({ vaultData }: VaultDataInterface) => {
 
   const handleShowPassword = () => {
     return showPassword ? setShowPassword(false) : setShowPassword(true)
+  }
+
+  const handleDeleteVault = (vaultId: string) => {
+    deleteVault(vaultId)
   }
 
   return (
@@ -86,7 +93,7 @@ export const VaultCard = ({ vaultData }: VaultDataInterface) => {
                 </div>
                 <div className="flex gap-2">
                   <Button className="h-10 w-6/12 bg-denim-800 cursor-pointer hover:bg-denim-700">Edit</Button>
-                  <Button variant="ghost" className="h-10 w-6/12 cursor-pointer text-red-800 hover:bg-red-800/10 hover:text-red-800">Delete</Button>
+                  <Button type="button" onClick={() => handleDeleteVault(vaultData.id)} variant="ghost" className="h-10 w-6/12 cursor-pointer text-red-800 hover:bg-red-800/10 hover:text-red-800">Delete</Button>
                 </div>
               </form>
 

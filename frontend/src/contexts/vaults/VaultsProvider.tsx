@@ -45,11 +45,28 @@ const VaultsProvider = ({ children }: VaultsProviderProps) => {
 
   }, [vaults])
 
+  const deleteVault = (vaultId: string) => {
+    setLoading(true)
+
+    
+    api.delete(`vaults/${vaultId}`)
+    .then(() => {
+      const deleted = vaults.filter(vault => vault.id !== vaultId)
+      setVaults(deleted)
+      }).catch((error) => {
+        console.log(error)
+      }).finally(() => {
+        setLoading(false)
+      })
+
+  }
+
   return (
     <VaultsContext.Provider
       value={{
         getVaults,
         createVault,
+        deleteVault,
         loading,
         vaults
       }}>
