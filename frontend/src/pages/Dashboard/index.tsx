@@ -16,6 +16,8 @@ export const Dashboard = () => {
     getVaults()
   }, [getVaults])
 
+  console.log(vaults)
+
   return (
     <main className="bg-arapawa-50 min-h-screen p-4">
       <ToastContainer />
@@ -32,7 +34,7 @@ export const Dashboard = () => {
               My Vaults
             </div>
 
-            {vaults && (
+            {vaults.length > 0 && (
               <CardCreateVault>
                 <Button className="bg-white text-denim-900 hover:cursor-pointer hover:bg-white/90 hover:text-denim-900">
                   <Plus />Storage a new password
@@ -50,7 +52,7 @@ export const Dashboard = () => {
               </>
             ) : (
               <>
-                {vaults
+                {vaults.length > 0
                   ?
                   vaults.map((vault) => <VaultCard key={vault.id} vaultData={vault} />)
                   :

@@ -6,7 +6,7 @@ import { Bounce, toast } from 'react-toastify'
 
 import { Vault } from "@/contexts/vaults/vaultsContext"
 import { useState } from "react"
-import { VaultConfigDialog } from "./CardPasswordDialog"
+import { VaultConfigDialog } from "./VaultConfigDialog"
 
 interface VaultDataInterface {
   vaultData: Vault
@@ -45,7 +45,7 @@ export const VaultCard = ({ vaultData }: VaultDataInterface) => {
         <div className="flex justify-between">
           <p className="text-denim-900 text-2xl font-bold">{vaultData.service_name}</p>
 
-          <VaultConfigDialog vaultData={vaultData}/>
+          <VaultConfigDialog vaultData={vaultData} />
 
         </div>
 
@@ -71,9 +71,9 @@ export const VaultCard = ({ vaultData }: VaultDataInterface) => {
           <div>
             <Button onClick={handleShowPassword} className="bg-denim-50 me-2 hover:bg-denim-100 cursor-pointer">
               {showPassword ? (
-                <EyeOff className="text-denim-900" />
-              ) : (
                 <Eye className="text-denim-900" />
+              ) : (
+                <EyeOff className="text-denim-900" />
               )}
             </Button>
             <Button onClick={() => handleCopyToClipBoard(vaultData.password)} className="bg-denim-50 hover:bg-denim-100 cursor-pointer">

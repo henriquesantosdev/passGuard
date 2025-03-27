@@ -1,17 +1,20 @@
-import { Briefcase, Eye, EyeOff, Lock, Mail, UserRound, X } from "lucide-react"
-import { Button } from "./ui/button"
+import { Bolt, Briefcase, Eye, EyeOff, Lock, Mail, UserRound, X } from "lucide-react"
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog"
-import { Input } from "./ui/input"
-import { ReactElement, useState } from "react"
-
-import * as z from 'zod'
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useVaults } from "@/contexts/hooks/useVaults"
+import { Button } from "./ui/button"
 import { Label } from "./ui/label"
+import { Input } from "./ui/input"
 
-interface CardCreateVaultProps {
-  children: ReactElement
+import { useState } from "react"
+
+import { Vault } from "@/contexts/vaults/vaultsContext"
+import { useVaults } from "@/contexts/hooks/useVaults"
+
+import * as z from "zod"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useForm } from "react-hook-form"
+
+interface VaultDataInterface {
+  vaultData: Vault
 }
 
 const schema = z.object({
@@ -23,39 +26,39 @@ const schema = z.object({
 
 type Schema = z.infer<typeof schema>
 
-export const CardCreateVault = ({ children }: CardCreateVaultProps) => {
+export const VaultConfigDialog = ({ vaultData }: VaultDataInterface) => {
+  const { deleteVault, updateVault } = useVaults()
 
-  const { createVault } = useVaults()
+  const [showPasswordDialog, setShowPasswordDialog] = useState<'password' | 'text'>('password')
 
-  const [showPassword, setShowPassword] = useState<'password' | 'text'>('password')
-
-  const handleShowPassword = () => {
-    if (showPassword === 'password') {
-      setShowPassword('text')
-    } else {
-      setShowPassword('password')
-    }
+  const handleShowPasswordDialog = () => {
+    return showPasswordDialog === 'password' ? setShowPasswordDialog('text') : setShowPasswordDialog('password')
   }
 
-  const { register, handleSubmit, reset, formState: { errors } } = useForm<Schema>({
+  const handleDeleteVault = (vaultId: string) => {
+    deleteVault(vaultId)
+  }
+
+  const { register, handleSubmit, formState: { errors } } = useForm<Schema>({
     resolver: zodResolver(schema)
   })
 
-  const onSubmit = (data: Schema) => {
-    createVault(data)
-    reset()
+  const onSubmit = (vaultData: Schema, vaultId: string) => {
+    updateVault(vaultData, vaultId)
   }
 
   return (
     <Dialog>
       <DialogTrigger>
-        {children}
+        <div className="bg-denim-50 hover:bg-denim-100 cursor-pointer p-2 rounded">
+          <Bolt className="text-denim-900 size-4" />
+        </div>
       </DialogTrigger>
       <DialogContent>
 
         <DialogHeader>
           <DialogTitle className="text-denim-950 flex justify-between items-center">
-            Storage a new password
+            {vaultData.service_name}
             <DialogClose asChild>
               <Button className="bg-white shadow-none hover:bg-denim-100 cursor-pointer">
                 <X className="text-denim-900" />
@@ -63,11 +66,13 @@ export const CardCreateVault = ({ children }: CardCreateVaultProps) => {
             </DialogClose>
           </DialogTitle>
           <DialogDescription>
-            You can see more about your saved access from the service
+            You can update and see details about your saved access
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-2 mt-4">
+        <form
+          onSubmit={handleSubmit((formData) => onSubmit(formData, vaultData.id))}
+          className="flex flex-col gap-2 mt-4">
 
           <div>
             <Label className="text-black/40" htmlFor="email">
@@ -77,7 +82,8 @@ export const CardCreateVault = ({ children }: CardCreateVaultProps) => {
               {...register('email')}
               className="h-12 mt-2"
               id="email"
-              placeholder="Insert your email"/>
+              placeholder="Insert your email"
+              defaultValue={vaultData?.email} />
             {errors.email && <span className="text-red-700 text-sm">{errors.email.message}</span>}
           </div>
 
@@ -89,7 +95,8 @@ export const CardCreateVault = ({ children }: CardCreateVaultProps) => {
               {...register('username')}
               className="h-12 mt-2"
               id="username"
-              placeholder="Insert your username" />
+              placeholder="Insert your username"
+              defaultValue={vaultData?.username} />
             {errors.username && <span className="text-red-700 text-sm">{errors.username.message}</span>}
           </div>
 
@@ -101,7 +108,8 @@ export const CardCreateVault = ({ children }: CardCreateVaultProps) => {
               {...register('service_name')}
               className="h-12 mt-2"
               id="service_name"
-              placeholder="Service Name" />
+              placeholder="Insert your service name"
+              defaultValue={vaultData?.service_name} />
             {errors.service_name && <span className="text-red-700 text-sm">{errors.service_name.message}</span>}
           </div>
 
@@ -112,15 +120,16 @@ export const CardCreateVault = ({ children }: CardCreateVaultProps) => {
             <div className="flex items-center gap-2 mt-2">
               <Input
                 {...register('password')}
-                type={showPassword}
+                type={showPasswordDialog}
                 className="h-12"
                 id="password"
-                placeholder="password" />
+                placeholder="Insert your password"
+                defaultValue={vaultData.password} />
               <Button
-                onClick={handleShowPassword}
+                onClick={handleShowPasswordDialog}
                 type="button"
                 className="h-12 w-12 bg-denim-50 shadow-none hover:bg-denim-100 cursor-pointer">
-                {showPassword === "password" ? (
+                {showPasswordDialog === "password" ? (
                   <EyeOff className="text-denim-900" />
                 ) : (
                   <Eye className="text-denim-900" />
@@ -130,8 +139,9 @@ export const CardCreateVault = ({ children }: CardCreateVaultProps) => {
             {errors.password && <span className="text-red-700 text-sm">{errors.password.message}</span>}
           </div>
 
-          <div className="flex gap-2">
-            <Button className="h-10 w-full bg-denim-800 cursor-pointer hover:bg-denim-700">Add password</Button>
+          <div className="flex gap-2 mt-4">
+            <Button className="h-10 w-6/12 bg-denim-800 cursor-pointer hover:bg-denim-700">Edit</Button>
+            <Button type="button" onClick={() => handleDeleteVault(vaultData.id)} variant="ghost" className="h-10 w-6/12 cursor-pointer text-red-800 hover:bg-red-800/10 hover:text-red-800">Delete</Button>
           </div>
         </form>
 

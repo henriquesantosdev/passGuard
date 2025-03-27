@@ -96,7 +96,7 @@ export class VaultService {
       return {
         statusCode: 200,
         message: 'Vault updated',
-        data: updated,
+        vault: updated,
       };
     } catch (error) {
       throw new HttpException(
