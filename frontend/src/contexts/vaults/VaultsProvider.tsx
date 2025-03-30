@@ -1,6 +1,7 @@
 import { api } from "@/api/axios"
-import { CreateVaultType, UpdateVaultType, Vault, VaultsContext } from "./vaultsContext"
+import { CreateVaultType, UpdateVaultType, Vault, VaultsContext, VaultsInfo } from "./vaultsContext"
 import { ReactNode, useCallback, useState } from "react"
+import { checkPasswordStrength } from "@/utils/checkPasswordStrength"
 
 interface VaultsProviderProps {
   children: ReactNode
@@ -8,6 +9,8 @@ interface VaultsProviderProps {
 
 const VaultsProvider = ({ children }: VaultsProviderProps) => {
   const [vaults, setVaults] = useState<Vault[] | []>([])
+  const [vaultsInfo, setVaultsInfo] = useState<VaultsInfo | undefined>(undefined)
+  const [getVaultsInfoLoading, setGetVaultsInfoLoading] = useState(false)
   const [loading, setLoading] = useState(false)
 
   const getVaults = useCallback(() => {
@@ -23,7 +26,6 @@ const VaultsProvider = ({ children }: VaultsProviderProps) => {
       .finally(() => {
         setLoading(false);
       });
-
   }, []);
 
   const createVault = useCallback((data: CreateVaultType) => {
@@ -42,7 +44,6 @@ const VaultsProvider = ({ children }: VaultsProviderProps) => {
     }).finally(() => {
       setLoading(false)
     })
-
   }, [vaults])
 
   const deleteVault = (vaultId: string) => {
@@ -57,12 +58,11 @@ const VaultsProvider = ({ children }: VaultsProviderProps) => {
       }).finally(() => {
         setLoading(false)
       })
-
   }
 
   const updateVault = (vaultData: UpdateVaultType, vaultId: string) => {
     setLoading(true)
-    
+
     api.put(`vaults/${vaultId}`, {
       email: vaultData.email,
       password: vaultData.password,
@@ -76,8 +76,41 @@ const VaultsProvider = ({ children }: VaultsProviderProps) => {
     }).finally(() => {
       setLoading(false)
     })
-
   }
+
+  const getVaultsInfo = useCallback(() => {
+    setGetVaultsInfoLoading(true)
+
+    const vaultsPasswordInfo = {
+      savedVaults: 0,
+      strong: 0,
+      weak: 0,
+      duplicated: 0
+    }
+
+    const passwordsChecked = new Set<string>()
+    
+    vaults.forEach(vault => {
+      vaultsPasswordInfo.savedVaults++
+      const passwordStrength = checkPasswordStrength(vault.password)
+
+      if (passwordStrength === 'strong') {
+        vaultsPasswordInfo.strong++
+      } else {
+        vaultsPasswordInfo.weak++
+      }
+
+      if (!passwordsChecked.has(vault.password)) {
+        passwordsChecked.add(vault.password)
+      }
+
+    })
+
+    vaultsPasswordInfo.duplicated = vaults.length - Array.from(passwordsChecked).length
+
+    setVaultsInfo(vaultsPasswordInfo)
+    setGetVaultsInfoLoading(false)
+  }, [vaults])
 
   return (
     <VaultsContext.Provider
@@ -86,6 +119,9 @@ const VaultsProvider = ({ children }: VaultsProviderProps) => {
         createVault,
         deleteVault,
         updateVault,
+        getVaultsInfo,
+        vaultsInfo,
+        getVaultsInfoLoading,
         loading,
         vaults
       }}>
