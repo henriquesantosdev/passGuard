@@ -7,6 +7,6 @@ export const checkPasswordStrength = (password: string) => {
   if (password.match(/[0-9]/)) strength++;
   if (password.match(/[^a-zA-Z0-9]/)) strength++;
 
-  if (strength <= 2) return 'weak'
-  if (strength >= 3) return 'strong'
+  if (strength <= 3) return 'weak'
+  if (strength >= 5) return 'strong'
 }
