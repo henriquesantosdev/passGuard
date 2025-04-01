@@ -5,7 +5,7 @@ import { Header } from "@/components/Header"
 import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
 import { useVaults } from "@/contexts/hooks/useVaults"
-import { Plus, Shield } from "lucide-react"
+import { BicepsFlexed, Plus, Repeat, Shield } from "lucide-react"
 import { useEffect } from "react"
 import { ToastContainer } from "react-toastify"
 
@@ -16,10 +16,8 @@ export const Dashboard = () => {
     getVaults()
   }, [getVaults])
 
-  console.log(vaults)
-
   return (
-    <main className="bg-arapawa-50 min-h-screen p-4">
+    <div className="bg-arapawa-50 min-h-screen p-4">
       <ToastContainer />
       <div className="w-full lg:max-w-8/12 mx-auto">
         <Header />
@@ -66,13 +64,24 @@ export const Dashboard = () => {
               </>
             )}
           </div>
-
         </div>
 
-        <div className="bg-denim-700 rounded-md mt-4">
-          <h2 className="text-2xl font-bold text-denim-50 p-4">Gerador de senhas</h2>
+        <div className="flex gap-4">
+          <div className="bg-denim-700 w-6/12 rounded-md mt-4">
+
+            <h2 className="text-2xl font-bold text-denim-50 p-4 flex items-center gap-4">
+              <Repeat className="size-8"/>
+              Password generator</h2>
+          </div>
+
+          <div className="bg-denim-700 w-6/12 rounded-md mt-4">
+
+            <h2 className="text-2xl font-bold text-denim-50 p-4 flex items-center gap-4">
+              <BicepsFlexed className="size-8"/>
+              Password strength test</h2>
+          </div>
         </div>
       </div>
-    </main>
+    </div>
   )
 }
