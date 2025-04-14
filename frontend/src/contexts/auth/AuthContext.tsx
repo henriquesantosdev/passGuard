@@ -13,7 +13,8 @@ export interface AuthContextType {
   loading: boolean;
   signIn: (email: string, password: string) => void;
   signUp: (email: string, password: string) => void;
-  signOut: () => void
+  signOut: () => void;
+  verifySignedUser: () => void
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined)

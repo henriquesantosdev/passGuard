@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useState } from "react"
+import { ReactNode, useCallback, useEffect, useState } from "react"
 import { AuthContext, User } from "./AuthContext"
 import { api } from "@/api/axios"
 import { useNavigate } from "react-router-dom"
@@ -16,14 +16,13 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 
   useEffect(() => {
     setLoading(true)
-
     const user = getUserStorage()
     if (user) {
       setUser(user)
       setLoading(false)
-      navigate('/dashboard', { replace: true })
+      return
     }
-
+    navigate('/signin')
     setLoading(false)
   }, [navigate])
 
@@ -36,17 +35,16 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
       setUser(response.data)
       setUserStorage(response.data)
       navigate('/dashboard', { replace: true })
-      }).catch((error) => {
+    }).catch((error) => {
       console.log(error)
     })
-    .finally(() => {
-      setLoading(false)
-    })
+      .finally(() => {
+        setLoading(false)
+      })
   }
 
   const signUp = (email: string, password: string) => {
     setLoading(true)
-    
     api.post('/users', {
       email,
       password
@@ -55,9 +53,9 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     }).catch((error) => {
       console.log(error)
     })
-    .finally(() => {
-      setLoading(false)
-    })
+      .finally(() => {
+        setLoading(false)
+      })
   }
 
   const signOut = () => {
@@ -65,6 +63,17 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     removeUserStorage()
     navigate('/', { replace: true })
   }
+
+  const verifySignedUser = useCallback(() => {
+    setLoading(true)
+    const user = getUserStorage()
+    if (user) {
+      setUser(user)
+      setLoading(false)
+      navigate('/dashboard', { replace: true })
+    }
+    setLoading(false)
+  }, [navigate])
 
   return (
     <AuthContext.Provider
@@ -74,6 +83,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
         signIn,
         signUp,
         signOut,
+        verifySignedUser,
         loading
       }}
     >

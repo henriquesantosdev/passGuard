@@ -13,7 +13,6 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { useAuth } from "@/contexts/hooks/useAuth"
 
-
 export const Header = () => {
 
   const { signOut } = useAuth()
@@ -45,7 +44,11 @@ export const Header = () => {
           <DropdownMenuContent>
             <DropdownMenuLabel>My Account</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="cursor-pointer">Profile</DropdownMenuItem>
+            <DropdownMenuItem className="cursor-pointer">
+              <a href='/profile'>
+                Profile
+              </a>
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
 

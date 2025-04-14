@@ -4,6 +4,7 @@ import { Signup } from './pages/Signup'
 import { Dashboard } from './pages/Dashboard'
 import AuthProvider from './contexts/auth/AuthProvider'
 import PrivateRoutes from './pages/Private-routes'
+import { Profile } from './pages/Profile'
 
 function App() {
 
@@ -15,6 +16,7 @@ function App() {
         <Route element={<PrivateRoutes />}>
           <Route path='/dashboard' element={<Dashboard />} />
         </Route>
+          <Route path='/profile' element={<Profile />} />
         <Route path='*' element={<Signin />} />
       </Routes>
     </AuthProvider>

@@ -4,7 +4,7 @@ import passguarLogo from '/passguard-logo.png'
 import vaultSvg from '/vault.svg'
 import { Link } from "react-router-dom"
 import { Eye, EyeOff, LoaderCircle, Lock, LogIn, Mail } from "lucide-react"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 import * as z from 'zod'
 import { useForm } from "react-hook-form"
@@ -23,8 +23,13 @@ type Schema = z.infer<typeof schema>
 
 export const Signin = () => {
 
-  const { signIn, loading } = useAuth()
+  const { verifySignedUser } = useAuth()
 
+  useEffect(() => {
+    verifySignedUser()
+  }, [verifySignedUser])
+
+  const { signIn, loading } = useAuth()
   const [showPassword, setShowPassword] = useState<'password' | 'text'>('password')
 
   const handleShowPassword = (): void => {
@@ -90,9 +95,9 @@ export const Signin = () => {
           </div>
 
           <span className="text-gray-500">Are you a new user? <Link to="/signup"
-              className="text-[#2F78E1] underline hover:text-arapawa-700">
-              Create an account
-            </Link>
+            className="text-[#2F78E1] underline hover:text-arapawa-700">
+            Create an account
+          </Link>
           </span>
 
           <Button disabled={loading} type="submit" className="w-full mt-6 h-12 text-lg cursor-pointer bg-[#2F78E1] hover:bg-arapawa-900 drop-shadow-lg shadow-[#2F78E1]/50">
