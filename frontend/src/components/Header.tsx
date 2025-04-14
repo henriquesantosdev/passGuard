@@ -1,6 +1,6 @@
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar"
 import passguardLogo from "/passguard-logo.png"
-import { LogOut, UserRound } from 'lucide-react'
+import { LayoutDashboard, LogOut, UserRound } from 'lucide-react'
 import { Button } from "./ui/button"
 
 import {
@@ -45,7 +45,14 @@ export const Header = () => {
             <DropdownMenuLabel>My Account</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem className="cursor-pointer">
-              <a href='/profile'>
+              <a href='/dashboard' className="flex items-center gap-2">
+                <LayoutDashboard />
+                Dashboard
+              </a>
+            </DropdownMenuItem>
+            <DropdownMenuItem className="cursor-pointer">
+              <a href='/profile' className="flex items-center gap-2">
+                <UserRound />
                 Profile
               </a>
             </DropdownMenuItem>
