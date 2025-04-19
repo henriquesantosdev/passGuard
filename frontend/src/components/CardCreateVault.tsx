@@ -193,7 +193,7 @@ export const CardCreateVault = ({ children }: CardCreateVaultProps) => {
                 onClick={handleShowSecureKey}
                 type="button"
                 className="h-12 w-12 bg-denim-50 shadow-none hover:bg-denim-100 cursor-pointer">
-                {showPassword === "password" ? (
+                {showSecureKey === "password" ? (
                   <EyeOff className="text-denim-900" />
                 ) : (
                   <Eye className="text-denim-900" />

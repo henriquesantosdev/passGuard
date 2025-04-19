@@ -59,7 +59,7 @@ export const VaultCard = ({ vaultData }: VaultDataInterface) => {
         </div>
 
         <div className="mt-2 flex text-denim-900 items-center justify-between w-full gap-2 border border-denim-100 rounded-md p-2">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 text-ellipsis">
             <Lock className="size-4" />
             {showPassword ? (
               <p>{vaultData.password}</p>

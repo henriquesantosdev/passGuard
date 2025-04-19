@@ -26,6 +26,7 @@ export type CreateVaultType = {
   email?: string;
   username?: string;
   password: string;
+  passphrase: string;
 }
 
 export type UpdateVaultType = {

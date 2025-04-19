@@ -1,4 +1,4 @@
-import { Bolt, Briefcase, Eye, EyeOff, Lock, Mail, UserRound, X } from "lucide-react"
+import { Bolt, Briefcase, Eye, EyeOff, KeyRound, Lock, Mail, UserRound, X } from "lucide-react"
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog"
 import { Button } from "./ui/button"
 import { Label } from "./ui/label"
@@ -22,6 +22,7 @@ const schema = z.object({
   service_name: z.string().nonempty(),
   username: z.string().optional(),
   password: z.string().nonempty(),
+  passphrase: z.string().nonempty(),
 })
 
 type Schema = z.infer<typeof schema>
@@ -30,9 +31,18 @@ export const VaultConfigDialog = ({ vaultData }: VaultDataInterface) => {
   const { deleteVault, updateVault } = useVaults()
 
   const [showPasswordDialog, setShowPasswordDialog] = useState<'password' | 'text'>('password')
+  const [showSecureKey, setShowSecureKey] = useState<'password' | 'text'>('password')
 
   const handleShowPasswordDialog = () => {
     return showPasswordDialog === 'password' ? setShowPasswordDialog('text') : setShowPasswordDialog('password')
+  }
+
+  const handleShowSecureKey = () => {
+    if (showSecureKey === 'password') {
+      setShowSecureKey('text')
+    } else {
+      setShowSecureKey('password')
+    }
   }
 
   const handleDeleteVault = (vaultId: string) => {
@@ -137,6 +147,31 @@ export const VaultConfigDialog = ({ vaultData }: VaultDataInterface) => {
               </Button>
             </div>
             {errors.password && <span className="text-red-700 text-sm">{errors.password.message}</span>}
+          </div>
+
+          <div>
+            <Label className="text-black/40 mt-2" htmlFor="passphrase">
+              <KeyRound className="size-4" /> Secret Passphrase:
+            </Label>
+            <div className="flex items-center gap-2 mt-2">
+              <Input
+                {...register('passphrase')}
+                type={showSecureKey}
+                className="h-12"
+                id="passphrase"
+                placeholder="Your secure text" />
+              <Button
+                onClick={handleShowSecureKey}
+                type="button"
+                className="h-12 w-12 bg-denim-50 shadow-none hover:bg-denim-100 cursor-pointer">
+                {showSecureKey === "password" ? (
+                  <EyeOff className="text-denim-900" />
+                ) : (
+                  <Eye className="text-denim-900" />
+                )}
+              </Button>
+            </div>
+            {errors.passphrase && <span className="text-red-700 text-sm">{errors.passphrase.message}</span>}
           </div>
 
           <div className="flex gap-2 mt-4">

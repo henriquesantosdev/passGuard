@@ -2,6 +2,7 @@ import { api } from "@/api/axios"
 import { CreateVaultType, UpdateVaultType, Vault, VaultsContext, VaultsInfo } from "./vaultsContext"
 import { ReactNode, useCallback, useState } from "react"
 import { checkPasswordStrength } from "@/utils/checkPasswordStrength"
+import { encryptPassword } from "@/utils/crypto"
 
 interface VaultsProviderProps {
   children: ReactNode
@@ -28,8 +29,10 @@ const VaultsProvider = ({ children }: VaultsProviderProps) => {
       });
   }, []);
 
-  const createVault = useCallback((data: CreateVaultType) => {
+  const createVault = useCallback(async (data: CreateVaultType) => {
     setLoading(true)
+
+    data.password = await encryptPassword(data.password, data.passphrase)
 
     api.post('/vaults', {
       email: data.email,
