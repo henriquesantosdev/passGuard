@@ -1,4 +1,4 @@
-import { Briefcase, Eye, EyeOff, Lock, Mail, UserRound, X } from "lucide-react"
+import { Briefcase, Eye, EyeOff, KeyRound, Lock, Mail, UserRound, X } from "lucide-react"
 import { Button } from "./ui/button"
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog"
 import { Input } from "./ui/input"
@@ -19,6 +19,7 @@ const schema = z.object({
   service_name: z.string().nonempty(),
   username: z.string().optional(),
   password: z.string().nonempty(),
+  passphrase: z.string().nonempty(),
 })
 
 type Schema = z.infer<typeof schema>
@@ -28,6 +29,10 @@ export const CardCreateVault = ({ children }: CardCreateVaultProps) => {
   const { createVault } = useVaults()
 
   const [showPassword, setShowPassword] = useState<'password' | 'text'>('password')
+  const [showSecureKey, setShowSecureKey] = useState<'password' | 'text'>('password')
+
+  const [showEmailInput, setShowEmailInput] = useState<boolean>(false);
+  const [showUsernameInput, setShowUsernameInput] = useState<boolean>(false);
 
   const handleShowPassword = () => {
     if (showPassword === 'password') {
@@ -35,6 +40,27 @@ export const CardCreateVault = ({ children }: CardCreateVaultProps) => {
     } else {
       setShowPassword('password')
     }
+  }
+
+  const handleShowSecureKey = () => {
+    if (showSecureKey === 'password') {
+      setShowSecureKey('text')
+    } else {
+      setShowSecureKey('password')
+    }
+  }
+
+  const handleShowEmailInput = () => {
+    setShowEmailInput(true)
+  }
+
+  const handleShowUsernameInput = () => {
+    setShowUsernameInput(true)
+  }
+
+  const handleMoreInfoReset = () => {
+    setShowUsernameInput(false)
+    setShowEmailInput(false)
   }
 
   const { register, handleSubmit, reset, formState: { errors } } = useForm<Schema>({
@@ -57,7 +83,7 @@ export const CardCreateVault = ({ children }: CardCreateVaultProps) => {
           <DialogTitle className="text-denim-950 flex justify-between items-center">
             Storage a new password
             <DialogClose asChild>
-              <Button className="bg-white shadow-none hover:bg-denim-100 cursor-pointer">
+              <Button onClick={handleMoreInfoReset} className="bg-white shadow-none hover:bg-denim-100 cursor-pointer">
                 <X className="text-denim-900" />
               </Button>
             </DialogClose>
@@ -67,31 +93,53 @@ export const CardCreateVault = ({ children }: CardCreateVaultProps) => {
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-2 mt-4">
 
-          <div>
-            <Label className="text-black/40" htmlFor="email">
-              <Mail className="size-4" />Email: (optional)
-            </Label>
-            <Input
-              {...register('email')}
-              className="h-12 mt-2"
-              id="email"
-              placeholder="Insert your email"/>
-            {errors.email && <span className="text-red-700 text-sm">{errors.email.message}</span>}
+        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-2">
+
+          <div className="flex justify-between mb-2">
+            {showEmailInput != true && (
+              <Button onClick={handleShowEmailInput} type="button" className="w-[calc(50%-4px)] bg-denim-800 cursor-pointer hover:bg-denim-700" size="lg">
+                <Mail className="size-4" />
+                Add email
+              </Button>
+            )}
+
+            {showUsernameInput != true && (
+              <Button onClick={handleShowUsernameInput} type="button" className="w-[calc(50%-4px)] bg-denim-800 cursor-pointer hover:bg-denim-700" size="lg">
+                <UserRound className="size-4" />
+                Add username
+              </Button>
+            )}
           </div>
 
-          <div>
-            <Label className="text-black/40 mt-2" htmlFor="username">
-              <UserRound className="size-4" /> Username: (optional)
-            </Label>
-            <Input
-              {...register('username')}
-              className="h-12 mt-2"
-              id="username"
-              placeholder="Insert your username" />
-            {errors.username && <span className="text-red-700 text-sm">{errors.username.message}</span>}
-          </div>
+          {showEmailInput && (
+            <div>
+              <Label className="text-black/40" htmlFor="email">
+                <Mail className="size-4" />Email: (optional)
+              </Label>
+              <Input
+                {...register('email')}
+                className="h-12 mt-2"
+                id="email"
+                placeholder="Insert your email" />
+              {errors.email && <span className="text-red-700 text-sm">{errors.email.message}</span>}
+            </div>
+          )}
+
+          {showUsernameInput && (
+            <div>
+              {showEmailInput}
+              <Label className="text-black/40 mt-2" htmlFor="username">
+                <UserRound className="size-4" /> Username: (optional)
+              </Label>
+              <Input
+                {...register('username')}
+                className="h-12 mt-2"
+                id="username"
+                placeholder="Insert your username" />
+              {errors.username && <span className="text-red-700 text-sm">{errors.username.message}</span>}
+            </div>
+          )}
 
           <div>
             <Label className="text-black/40 mt-2" htmlFor="service_name">
@@ -130,7 +178,32 @@ export const CardCreateVault = ({ children }: CardCreateVaultProps) => {
             {errors.password && <span className="text-red-700 text-sm">{errors.password.message}</span>}
           </div>
 
-          <div className="flex gap-2">
+          <div>
+            <Label className="text-black/40 mt-2" htmlFor="passphrase">
+              <KeyRound className="size-4" /> Secret Passphrase:
+            </Label>
+            <div className="flex items-center gap-2 mt-2">
+              <Input
+                {...register('passphrase')}
+                type={showSecureKey}
+                className="h-12"
+                id="passphrase"
+                placeholder="Your secure text" />
+              <Button
+                onClick={handleShowSecureKey}
+                type="button"
+                className="h-12 w-12 bg-denim-50 shadow-none hover:bg-denim-100 cursor-pointer">
+                {showPassword === "password" ? (
+                  <EyeOff className="text-denim-900" />
+                ) : (
+                  <Eye className="text-denim-900" />
+                )}
+              </Button>
+            </div>
+            {errors.passphrase && <span className="text-red-700 text-sm">{errors.passphrase.message}</span>}
+          </div>
+
+          <div className="flex gap-2 mt-4">
             <Button className="h-10 w-full bg-denim-800 cursor-pointer hover:bg-denim-700">Add password</Button>
           </div>
         </form>
