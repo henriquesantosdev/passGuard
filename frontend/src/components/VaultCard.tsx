@@ -48,9 +48,11 @@ export const VaultCard = ({ vaultData }: VaultDataInterface) => {
           <p className="text-denim-900 text-2xl font-bold">{vaultData.service_name}</p>
 
           {encrypted ? (
-            <Button disabled onClick={handleShowPassword} className="hover:cursor-grab bg-denim-50 me-2 hover:bg-denim-100 cursor-pointer">
-              <Bolt className="text-denim-900 size-4" />
-            </Button>
+            <div className="hover:cursor-not-allowed ">
+              <Button disabled onClick={handleShowPassword} className="bg-denim-50 me-2 hover:bg-denim-100">
+                <Bolt className="text-denim-900 size-4" />
+              </Button>
+            </div>
           ) : (
             <VaultConfigDialog vaultData={vaultData} />
           )}

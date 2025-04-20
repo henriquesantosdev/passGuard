@@ -111,6 +111,7 @@ export const CardDecryptPassword = ({ children, setEncrypted, vaultData }: CardC
                 id="password"
                 placeholder="password"
                 defaultValue={vaultData.password}
+                disabled
               />
 
               <Button
