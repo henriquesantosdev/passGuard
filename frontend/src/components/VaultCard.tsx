@@ -1,4 +1,4 @@
-import { Copy, Eye, EyeOff, Lock, Mail, ShieldCheck, UserRound } from "lucide-react"
+import { Bolt, Copy, Eye, EyeOff, Lock, Mail, ShieldCheck, UserRound } from "lucide-react"
 
 import { Button } from "./ui/button"
 
@@ -7,6 +7,7 @@ import { Bounce, toast } from 'react-toastify'
 import { Vault } from "@/contexts/vaults/vaultsContext"
 import { useState } from "react"
 import { VaultConfigDialog } from "./VaultConfigDialog"
+import { CardDecryptPassword } from "./CardDecryptPassword"
 
 interface VaultDataInterface {
   vaultData: Vault
@@ -15,6 +16,7 @@ interface VaultDataInterface {
 export const VaultCard = ({ vaultData }: VaultDataInterface) => {
 
   const [showPassword, setShowPassword] = useState(false)
+  const [encrypted, setEncrypted] = useState(true)
 
   const handleCopyToClipBoard = (password: string) => {
     navigator.clipboard.writeText(password)
@@ -45,7 +47,13 @@ export const VaultCard = ({ vaultData }: VaultDataInterface) => {
         <div className="flex justify-between">
           <p className="text-denim-900 text-2xl font-bold">{vaultData.service_name}</p>
 
-          <VaultConfigDialog vaultData={vaultData} />
+          {encrypted ? (
+            <Button disabled onClick={handleShowPassword} className="hover:cursor-grab bg-denim-50 me-2 hover:bg-denim-100 cursor-pointer">
+              <Bolt className="text-denim-900 size-4" />
+            </Button>
+          ) : (
+            <VaultConfigDialog vaultData={vaultData} />
+          )}
 
         </div>
 
@@ -61,22 +69,35 @@ export const VaultCard = ({ vaultData }: VaultDataInterface) => {
         <div className="mt-2 flex text-denim-900 items-center justify-between w-full gap-2 border border-denim-100 rounded-md p-2">
           <div className="flex items-center gap-2 text-ellipsis">
             <Lock className="size-4" />
-            {showPassword ? (
-              <p>{vaultData.password}</p>
+            {encrypted ? (
+              <p>Password encrypted</p>
             ) : (
-              <p>********************</p>
+              showPassword ? (
+                <p>{vaultData.password}</p>
+              ) : (
+                <p>**************</p>
+              )
             )}
           </div>
 
           <div>
-            <Button onClick={handleShowPassword} className="bg-denim-50 me-2 hover:bg-denim-100 cursor-pointer">
-              {showPassword ? (
-                <Eye className="text-denim-900" />
-              ) : (
-                <EyeOff className="text-denim-900" />
-              )}
-            </Button>
-            <Button onClick={() => handleCopyToClipBoard(vaultData.password)} className="bg-denim-50 hover:bg-denim-100 cursor-pointer">
+            {encrypted ? (
+              <CardDecryptPassword setEncrypted={setEncrypted} vaultData={vaultData}>
+                <Button onClick={handleShowPassword} className="text-denim-900 bg-denim-50 me-2 hover:bg-denim-100 cursor-pointer">
+                  <Lock />
+                  Decrypt
+                </Button>
+              </CardDecryptPassword>
+            ) : (
+              <Button onClick={handleShowPassword} className="bg-denim-50 me-2 hover:bg-denim-100 cursor-pointer">
+                {showPassword ? (
+                  <Eye className="text-denim-900" />
+                ) : (
+                  <EyeOff className="text-denim-900" />
+                )}
+              </Button>
+            )}
+            <Button disabled={encrypted} onClick={() => handleCopyToClipBoard(vaultData.password)} className="bg-denim-50 hover:bg-denim-100 cursor-pointer">
               <Copy className="text-denim-900" />
             </Button>
           </div>
