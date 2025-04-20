@@ -34,6 +34,7 @@ export type UpdateVaultType = {
   email?: string;
   username?: string;
   password: string;
+  passphrase: string;
 }
 
 export type VaultsInfo = {

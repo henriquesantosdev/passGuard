@@ -63,12 +63,14 @@ const VaultsProvider = ({ children }: VaultsProviderProps) => {
       })
   }
 
-  const updateVault = (vaultData: UpdateVaultType, vaultId: string) => {
+  const updateVault = async (vaultData: UpdateVaultType, vaultId: string) => {
     setLoading(true)
+
+    const encryptedPassword = await encryptPassword(vaultData.password, vaultData.passphrase)
 
     api.put(`vaults/${vaultId}`, {
       email: vaultData.email,
-      password: vaultData.password,
+      password: encryptedPassword,
       username: vaultData.username,
       service_name: vaultData.service_name
     }).then((response) => {
