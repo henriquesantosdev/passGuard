@@ -17,6 +17,7 @@ export const VaultCard = ({ vaultData }: VaultDataInterface) => {
 
   const [showPassword, setShowPassword] = useState(false)
   const [encrypted, setEncrypted] = useState(true)
+  const [passphrase, setPassphrase] = useState('')
 
   const handleCopyToClipBoard = (password: string) => {
     navigator.clipboard.writeText(password)
@@ -54,7 +55,7 @@ export const VaultCard = ({ vaultData }: VaultDataInterface) => {
               </Button>
             </div>
           ) : (
-            <VaultConfigDialog vaultData={vaultData} />
+            <VaultConfigDialog passphrase={passphrase} vaultData={vaultData} />
           )}
 
         </div>
@@ -84,7 +85,7 @@ export const VaultCard = ({ vaultData }: VaultDataInterface) => {
 
           <div>
             {encrypted ? (
-              <CardDecryptPassword setEncrypted={setEncrypted} vaultData={vaultData}>
+              <CardDecryptPassword setPassphrase={setPassphrase} setEncrypted={setEncrypted} vaultData={vaultData}>
                 <Button onClick={handleShowPassword} className="text-denim-900 bg-denim-50 me-2 hover:bg-denim-100 cursor-pointer">
                   <Lock />
                   Decrypt

@@ -15,6 +15,7 @@ import { Bounce, toast } from "react-toastify"
 interface CardCreateVaultProps {
   children: ReactElement,
   setEncrypted: (passwordCondition: boolean) => void,
+  setPassphrase: (passphrase: string) => void,
   vaultData: Vault
 }
 
@@ -25,7 +26,7 @@ const schema = z.object({
 
 type Schema = z.infer<typeof schema>
 
-export const CardDecryptPassword = ({ children, setEncrypted, vaultData }: CardCreateVaultProps) => {
+export const CardDecryptPassword = ({ children, setEncrypted, vaultData, setPassphrase }: CardCreateVaultProps) => {
 
   const [showPassword, setShowPassword] = useState<'password' | 'text'>('text')
   const [showSecureKey, setShowSecureKey] = useState<'password' | 'text'>('password')
@@ -54,6 +55,7 @@ export const CardDecryptPassword = ({ children, setEncrypted, vaultData }: CardC
     try {
       const passwordDecrypted = await decryptPassword(data.password, data.passphrase)
       vaultData.password = passwordDecrypted
+      setPassphrase(data.passphrase)
       setEncrypted(false)
       toast.success('Password Decrypted!', {
         position: "bottom-right",

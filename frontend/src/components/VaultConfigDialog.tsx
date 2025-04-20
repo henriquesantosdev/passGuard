@@ -14,7 +14,8 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 
 interface VaultDataInterface {
-  vaultData: Vault
+  vaultData: Vault,
+  passphrase: string
 }
 
 const schema = z.object({
@@ -27,7 +28,7 @@ const schema = z.object({
 
 type Schema = z.infer<typeof schema>
 
-export const VaultConfigDialog = ({ vaultData }: VaultDataInterface) => {
+export const VaultConfigDialog = ({ vaultData, passphrase }: VaultDataInterface) => {
   const { deleteVault, updateVault } = useVaults()
 
   const [showPasswordDialog, setShowPasswordDialog] = useState<'password' | 'text'>('password')
@@ -159,7 +160,9 @@ export const VaultConfigDialog = ({ vaultData }: VaultDataInterface) => {
                 type={showSecureKey}
                 className="h-12"
                 id="passphrase"
-                placeholder="Your secure text" />
+                placeholder="Your secure text"
+                defaultValue={passphrase}
+                />
               <Button
                 onClick={handleShowSecureKey}
                 type="button"
