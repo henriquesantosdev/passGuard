@@ -64,6 +64,7 @@ export class UserService {
         data: {
           email: createUserDto.email,
           password: passwordHash,
+          passphrase: createUserDto.passphrase,
         },
       });
 
@@ -92,6 +93,7 @@ export class UserService {
     tokenPayload: TokenPayloadDto,
   ) {
     try {
+      console.log(updateUserDto);
       const user = await this.prisma.user.findFirst({
         where: {
           id: tokenPayload.sub,
@@ -109,9 +111,13 @@ export class UserService {
       const newDataUser: {
         email?: string;
         password?: string;
+        passphrase?: string;
       } = {
         email: updateUserDto.email || user.email,
+        passphrase: updateUserDto.passphrase || user.passphrase,
       };
+
+      console.log(newDataUser);
 
       if (updateUserDto?.password) {
         const newPasswordHash = await this.hashingService.hash(
@@ -127,6 +133,7 @@ export class UserService {
         data: {
           email: newDataUser.email,
           password: newDataUser?.password || user?.password,
+          passphrase: newDataUser?.passphrase,
         },
       });
 
@@ -169,7 +176,7 @@ export class UserService {
 
       return {
         statusCode: 200,
-        message: 'Use deleted',
+        message: 'User deleted',
         data: deleted,
       };
     } catch {

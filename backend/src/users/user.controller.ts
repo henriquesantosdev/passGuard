@@ -44,7 +44,7 @@ export class UserController {
     return this.userService.updateUser(updateUserDto, tokenPayload);
   }
 
-  @Delete(':id')
+  @Delete()
   deleteUSer(@TokenPayloadParam() tokenPayload: TokenPayloadDto) {
     return this.userService.deleteUser(tokenPayload);
   }
