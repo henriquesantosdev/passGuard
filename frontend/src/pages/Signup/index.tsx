@@ -9,13 +9,14 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from "react-hook-form"
 
 import { useState } from "react"
-import { Eye, EyeOff, LoaderCircle, Lock, LogIn, Mail } from "lucide-react"
+import { Eye, EyeOff, KeyRound, LoaderCircle, Lock, LogIn, Mail } from "lucide-react"
 
 const shortPassword = z.string().trim().min(6, { message: "Password is too short" });
 
 const schema = z.object({
   email: z.string().email().nonempty(),
   password: z.string().nonempty().pipe(shortPassword),
+  passphrase: z.string().nonempty().pipe(shortPassword),
   confirmPassword: z.string().pipe(shortPassword),
 })
 
@@ -24,6 +25,7 @@ type Schema = z.infer<typeof schema>
 export const Signup = () => {
 
   const [showPassword, setShowPassword] = useState<'password' | 'text'>('password')
+  const [showPassphrase, setShowPassphrase] = useState<'password' | 'text'>('password')
   const [loading, setLoading] = useState<boolean>(false)
 
   const handleShowPassword = (): void => {
@@ -31,6 +33,14 @@ export const Signup = () => {
       setShowPassword('text')
     } else {
       setShowPassword('password')
+    }
+  }
+
+  const handleShowPassphrase = (): void => {
+    if (showPassphrase === 'password') {
+      setShowPassphrase('text')
+    } else {
+      setShowPassphrase('password')
     }
   }
 
@@ -82,7 +92,7 @@ export const Signup = () => {
                   type={showPassword}
                   className="text-arapawa-950 h-12 border-arapawa-200 pl-10 w-full"
                 />
-                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" size={20} />
+                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-arapawa-500" size={20} />
               </div>
               <Button
                 type="button"
@@ -108,6 +118,30 @@ export const Signup = () => {
               <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-arapawa-500" size={20} />
             </div>
             {errors.confirmPassword && <span className="text-red-700 text-sm">* {errors.confirmPassword.message}</span>}
+          </div>
+
+          <div className="mt-4">
+            <div className="flex gap-2 items-center mb-1">
+              <div className="relative w-full">
+                <Input
+                  {...register('passphrase')}
+                  placeholder="Enter your passphrase"
+                  type={showPassphrase}
+                  className="text-arapawa-950 h-12 border-arapawa-200 pl-10 w-full"
+                />
+                <KeyRound className="absolute left-3 top-1/2 transform -translate-y-1/2 text-arapawa-500" size={20} />
+              </div>
+              <Button
+                type="button"
+                onClick={handleShowPassphrase}
+                className="bg-denim-50 hover:bg-denim-100 cursor-pointer p-2 rounded"
+              >{showPassword === 'password' ? (
+                <Eye className="text-denim-900 size-5" />
+              ) : (
+                <EyeOff className="text-denim-900 size-5" />
+              )}</Button>
+            </div>
+            {errors.passphrase && <span className="text-red-700 text-sm">* {errors.passphrase.message}</span>}
           </div>
 
           <span className="text-gray-500">Already have a account? <Link to="/" className="text-[#2F78E1] underline hover:text-arapawa-700">Signin</Link></span>

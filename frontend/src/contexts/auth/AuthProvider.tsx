@@ -22,7 +22,6 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
       setLoading(false)
       return
     }
-    navigate('/signin')
     setLoading(false)
   }, [navigate])
 
