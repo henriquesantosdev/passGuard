@@ -58,6 +58,7 @@ export class AuthService {
       return {
         id: user.id,
         email: user.email,
+        passphrase: user.passphrase,
         created_at: user.created_at,
         token: jwtToken,
       };

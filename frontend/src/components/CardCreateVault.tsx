@@ -9,6 +9,8 @@ import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useVaults } from "@/contexts/hooks/useVaults"
 import { Label } from "./ui/label"
+import { useAuth } from "@/contexts/hooks/useAuth"
+import { verifyPassphrase } from "@/utils/verifyPassphrase"
 
 interface CardCreateVaultProps {
   children: ReactElement
@@ -27,6 +29,7 @@ type Schema = z.infer<typeof schema>
 export const CardCreateVault = ({ children }: CardCreateVaultProps) => {
 
   const { createVault } = useVaults()
+  const { user } = useAuth()
 
   const [showPassword, setShowPassword] = useState<'password' | 'text'>('password')
   const [showSecureKey, setShowSecureKey] = useState<'password' | 'text'>('password')
@@ -61,16 +64,26 @@ export const CardCreateVault = ({ children }: CardCreateVaultProps) => {
   const handleMoreInfoReset = () => {
     setShowUsernameInput(false)
     setShowEmailInput(false)
+    reset()
   }
 
-  const { register, handleSubmit, reset, formState: { errors } } = useForm<Schema>({
+  const { register, handleSubmit, reset, setError, formState: { errors } } = useForm<Schema>({
     resolver: zodResolver(schema)
   })
 
-  const onSubmit = (data: Schema) => {
-    createVault(data)
-    reset()
-  }
+  const onSubmit =
+    (passphraseEncrypted: string) =>
+      async (data: Schema) => {
+        const passphraseVeify = await verifyPassphrase(passphraseEncrypted, data.passphrase)
+
+        if (!passphraseVeify) {
+          setError('passphrase', { message: 'Wrong passphrase' })
+          return
+        }
+
+        createVault(data, data.passphrase)
+        reset()
+      }
 
   return (
     <Dialog>
@@ -94,7 +107,7 @@ export const CardCreateVault = ({ children }: CardCreateVaultProps) => {
         </DialogHeader>
 
 
-        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-2">
+        <form onSubmit={handleSubmit(onSubmit(user.passphrase))} className="flex flex-col gap-2">
 
           <div className="flex justify-between mb-2">
             {showEmailInput != true && (

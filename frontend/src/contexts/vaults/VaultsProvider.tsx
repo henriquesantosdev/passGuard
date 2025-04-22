@@ -29,10 +29,10 @@ const VaultsProvider = ({ children }: VaultsProviderProps) => {
       });
   }, []);
 
-  const createVault = useCallback(async (data: CreateVaultType) => {
+  const createVault = useCallback(async (data: CreateVaultType, passphrase: string) => {
     setLoading(true)
 
-    data.password = await encryptPassword(data.password, data.passphrase)
+    data.password = await encryptPassword(data.password, passphrase)
 
     api.post('/vaults', {
       email: data.email,

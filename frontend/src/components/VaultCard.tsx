@@ -1,4 +1,4 @@
-import { Bolt, Copy, Eye, EyeOff, Lock, Mail, ShieldCheck, UserRound } from "lucide-react"
+import { Bolt, Copy, Eye, EyeOff, Lock, Mail, ShieldCheck, Trash2, UserRound } from "lucide-react"
 
 import { Button } from "./ui/button"
 
@@ -8,12 +8,15 @@ import { Vault } from "@/contexts/vaults/vaultsContext"
 import { useState } from "react"
 import { VaultConfigDialog } from "./VaultConfigDialog"
 import { CardDecryptPassword } from "./CardDecryptPassword"
+import { useVaults } from "@/contexts/hooks/useVaults"
 
 interface VaultDataInterface {
   vaultData: Vault
 }
 
 export const VaultCard = ({ vaultData }: VaultDataInterface) => {
+
+  const { deleteVault } = useVaults()
 
   const [showPassword, setShowPassword] = useState(false)
   const [encrypted, setEncrypted] = useState(true)
@@ -39,6 +42,10 @@ export const VaultCard = ({ vaultData }: VaultDataInterface) => {
     return showPassword ? setShowPassword(false) : setShowPassword(true)
   }
 
+  const handleDeleteVault = (vaultId: string) => {
+    deleteVault(vaultId)
+  }
+
   return (
     <div className="bg-white flex gap-4 p-4 rounded-md">
       <div className="flex h-[80px]">
@@ -52,6 +59,9 @@ export const VaultCard = ({ vaultData }: VaultDataInterface) => {
             <div className="hover:cursor-not-allowed ">
               <Button disabled onClick={handleShowPassword} className="bg-denim-50 me-2 hover:bg-denim-100">
                 <Bolt className="text-denim-900 size-4" />
+              </Button>
+              <Button onClick={() => handleDeleteVault(vaultData.id)} className="cursor-pointer text-red-800 bg-red-800/10 hover:bg-red-800/20 hover:text-red-800">
+                <Trash2 className="size-4" />
               </Button>
             </div>
           ) : (

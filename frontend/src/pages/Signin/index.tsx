@@ -11,6 +11,7 @@ import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 
 import { useAuth } from "@/contexts/hooks/useAuth"
+import { ToastContainer } from "react-toastify"
 
 const shortPassword = z.string().trim().min(6, { message: "Password is too short" });
 
@@ -50,6 +51,7 @@ export const Signin = () => {
 
   return (
     <main className="bg-arapawa-900 h-screen flex items-center justify-center p-4">
+      <ToastContainer />
       <div className="bg-white p-6 md:w-[1000px] gap-6 items-center rounded-md flex">
         <form className="w-full md:w-6/12" onSubmit={handleSubmit(onSubmit)}>
           <div>

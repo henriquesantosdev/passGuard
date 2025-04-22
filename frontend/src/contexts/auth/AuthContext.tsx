@@ -5,11 +5,12 @@ export interface User {
   email: string;
   created_at: string;
   token: string
+  passphrase: string
 }
 
 export interface AuthContextType {
   signed: boolean;
-  user: User | null;
+  user: User;
   loading: boolean;
   signIn: (email: string, password: string) => void;
   signUp: (email: string, password: string, passphrase: string) => void;

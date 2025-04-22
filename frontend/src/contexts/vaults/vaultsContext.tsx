@@ -11,7 +11,7 @@ export interface Vault {
 
 export interface VaultContextType {
   getVaults: () => void;
-  createVault: (data: CreateVaultType) => void;
+  createVault: (data: CreateVaultType, passphrase: string) => void;
   deleteVault: (vaultId: string) => void;
   updateVault: (vaultData: UpdateVaultType, vaultId: string) => void;
   getVaultsInfo: () => void;
@@ -26,7 +26,6 @@ export type CreateVaultType = {
   email?: string;
   username?: string;
   password: string;
-  passphrase: string;
 }
 
 export type UpdateVaultType = {
