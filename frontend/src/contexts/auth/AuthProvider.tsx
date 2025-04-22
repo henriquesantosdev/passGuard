@@ -3,6 +3,7 @@ import { AuthContext, User } from "./AuthContext"
 import { api } from "@/api/axios"
 import { useNavigate } from "react-router-dom"
 import { getUserStorage, removeUserStorage, setUserStorage } from "@/utils/user-storage"
+import { encryptPassword } from "@/utils/crypto"
 
 interface AuthProviderProps {
   children: ReactNode
@@ -42,13 +43,20 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
       })
   }
 
-  const signUp = (email: string, password: string) => {
+  const signUp = async (email: string, password: string, passphrase: string) => {
     setLoading(true)
+
+    const passphraseEncrypted = await encryptPassword(
+      import.meta.env.VITE_APP_ENCRYPTION_BASE_PASSPHRASE,
+      passphrase
+    )
+
     api.post('/users', {
       email,
-      password
-    }).then((response) => {
-      setUser(response.data)
+      password,
+      passphrase: passphraseEncrypted
+    }).then(() => {
+      navigate('/', { replace: true })
     }).catch((error) => {
       console.log(error)
     })

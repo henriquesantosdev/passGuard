@@ -10,6 +10,7 @@ import { useForm } from "react-hook-form"
 
 import { useState } from "react"
 import { Eye, EyeOff, KeyRound, LoaderCircle, Lock, LogIn, Mail } from "lucide-react"
+import { useAuth } from "@/contexts/hooks/useAuth"
 
 const shortPassword = z.string().trim().min(6, { message: "Password is too short" });
 
@@ -23,10 +24,10 @@ const schema = z.object({
 type Schema = z.infer<typeof schema>
 
 export const Signup = () => {
+  const { signUp, loading } = useAuth()
 
   const [showPassword, setShowPassword] = useState<'password' | 'text'>('password')
   const [showPassphrase, setShowPassphrase] = useState<'password' | 'text'>('password')
-  const [loading, setLoading] = useState<boolean>(false)
 
   const handleShowPassword = (): void => {
     if (showPassword === 'password') {
@@ -49,16 +50,11 @@ export const Signup = () => {
   })
 
   const onSubmit = (data: Schema) => {
-    setLoading(true)
     if (data.password !== data.confirmPassword) {
       setError('confirmPassword', { message: 'The passwords do not match' })
       return
     }
-
-    setTimeout(() => {
-      console.log(data)
-      setLoading(false)
-    }, 1000)
+    signUp(data.email, data.password, data.passphrase)
   }
 
   return (
@@ -135,7 +131,7 @@ export const Signup = () => {
                 type="button"
                 onClick={handleShowPassphrase}
                 className="bg-denim-50 hover:bg-denim-100 cursor-pointer p-2 rounded"
-              >{showPassword === 'password' ? (
+              >{showPassphrase === 'password' ? (
                 <Eye className="text-denim-900 size-5" />
               ) : (
                 <EyeOff className="text-denim-900 size-5" />

@@ -12,7 +12,7 @@ export interface AuthContextType {
   user: User | null;
   loading: boolean;
   signIn: (email: string, password: string) => void;
-  signUp: (email: string, password: string) => void;
+  signUp: (email: string, password: string, passphrase: string) => void;
   signOut: () => void;
   verifySignedUser: () => void
 }
