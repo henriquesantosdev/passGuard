@@ -11,7 +11,7 @@ import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 
 import { useAuth } from "@/contexts/hooks/useAuth"
-import { ToastContainer } from "react-toastify"
+import { Bounce, toast, ToastContainer } from "react-toastify"
 
 const shortPassword = z.string().trim().min(6, { message: "Password is too short" });
 
@@ -24,11 +24,25 @@ type Schema = z.infer<typeof schema>
 
 export const Signin = () => {
 
-  const { verifySignedUser } = useAuth()
+  const { verifySignedUser, userCreated, setUserCreated } = useAuth()
 
   useEffect(() => {
     verifySignedUser()
-  }, [verifySignedUser])
+    if (userCreated) {
+      toast.success('Successfully signed!', {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Bounce,
+      });
+    }
+    setUserCreated(false)
+  }, [verifySignedUser, userCreated, setUserCreated])
 
   const { signIn, loading } = useAuth()
   const [showPassword, setShowPassword] = useState<'password' | 'text'>('password')

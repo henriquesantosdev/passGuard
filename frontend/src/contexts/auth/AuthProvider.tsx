@@ -11,6 +11,7 @@ interface AuthProviderProps {
 
 const AuthProvider = ({ children }: AuthProviderProps) => {
   const [loading, setLoading] = useState(false)
+  const [userCreated, setUserCreated] = useState(false)
   const [user, setUser] = useState<User | null>(null)
 
   const navigate = useNavigate()
@@ -56,6 +57,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
       password,
       passphrase: passphraseEncrypted
     }).then(() => {
+      setUserCreated(true)
       navigate('/', { replace: true })
     }).catch((error) => {
       console.log(error)
@@ -87,6 +89,8 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
       value={{
         signed: !!user,
         user,
+        userCreated,
+        setUserCreated,
         signIn,
         signUp,
         signOut,
