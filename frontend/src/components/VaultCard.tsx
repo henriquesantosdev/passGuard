@@ -1,4 +1,4 @@
-import { Bolt, Copy, Eye, EyeOff, Lock, Mail, ShieldCheck, Trash2, UserRound } from "lucide-react"
+import { Bolt, Copy, Eye, EyeOff, Lock, LockOpen, Mail, ShieldCheck, Trash2, UserRound } from "lucide-react"
 
 import { Button } from "./ui/button"
 
@@ -7,20 +7,19 @@ import { Bounce, toast } from 'react-toastify'
 import { Vault } from "@/contexts/vaults/vaultsContext"
 import { useState } from "react"
 import { VaultConfigDialog } from "./VaultConfigDialog"
-import { CardDecryptPassword } from "./CardDecryptPassword"
 import { useVaults } from "@/contexts/hooks/useVaults"
+import { useAuth } from "@/contexts/hooks/useAuth"
+import { CardDecryptVault } from "./CardDecryptVault"
 
 interface VaultDataInterface {
   vaultData: Vault
 }
 
 export const VaultCard = ({ vaultData }: VaultDataInterface) => {
-
   const { deleteVault } = useVaults()
+  const { user } = useAuth()
 
   const [showPassword, setShowPassword] = useState(false)
-  const [encrypted, setEncrypted] = useState(true)
-  const [passphrase, setPassphrase] = useState('')
 
   const handleCopyToClipBoard = (password: string) => {
     navigator.clipboard.writeText(password)
@@ -55,17 +54,24 @@ export const VaultCard = ({ vaultData }: VaultDataInterface) => {
         <div className="flex justify-between">
           <p className="text-denim-900 text-2xl font-bold">{vaultData.service_name}</p>
 
-          {encrypted ? (
+          {vaultData.encrypted ? (
             <div className="hover:cursor-not-allowed ">
               <Button disabled onClick={handleShowPassword} className="bg-denim-50 me-2 hover:bg-denim-100">
                 <Bolt className="text-denim-900 size-4" />
               </Button>
-              <Button onClick={() => handleDeleteVault(vaultData.id)} className="cursor-pointer text-red-800 bg-red-800/10 hover:bg-red-800/20 hover:text-red-800">
+
+              <Button onClick={() => handleDeleteVault(vaultData.id)} className="cursor-pointer text-red-800 bg-red-800/10 hover:bg-red-800/20 hover:text-red-800 me-2">
                 <Trash2 className="size-4" />
               </Button>
+
+              <CardDecryptVault passphrase={user?.passphrase} vaultId={vaultData.id}>
+                <Button className="cursor-pointer text-denim-800 bg-denim-800/10 hover:bg-denim-800/20 hover:text-denim-800">
+                  <LockOpen className="size-4" />
+                </Button>
+              </CardDecryptVault>
             </div>
           ) : (
-            <VaultConfigDialog passphrase={passphrase} vaultData={vaultData} />
+            <VaultConfigDialog passphrase={user?.passphrase} vaultData={vaultData} />
           )}
 
         </div>
@@ -82,7 +88,7 @@ export const VaultCard = ({ vaultData }: VaultDataInterface) => {
         <div className="mt-2 flex text-denim-900 items-center justify-between w-full gap-2 border border-denim-100 rounded-md p-2">
           <div className="flex items-center gap-2 text-ellipsis">
             <Lock className="size-4" />
-            {encrypted ? (
+            {vaultData.encrypted ? (
               <p>Password encrypted</p>
             ) : (
               showPassword ? (
@@ -94,23 +100,14 @@ export const VaultCard = ({ vaultData }: VaultDataInterface) => {
           </div>
 
           <div>
-            {encrypted ? (
-              <CardDecryptPassword setPassphrase={setPassphrase} setEncrypted={setEncrypted} vaultData={vaultData}>
-                <Button onClick={handleShowPassword} className="text-denim-900 bg-denim-50 me-2 hover:bg-denim-100 cursor-pointer">
-                  <Lock />
-                  Decrypt
-                </Button>
-              </CardDecryptPassword>
-            ) : (
-              <Button onClick={handleShowPassword} className="bg-denim-50 me-2 hover:bg-denim-100 cursor-pointer">
-                {showPassword ? (
-                  <Eye className="text-denim-900" />
-                ) : (
-                  <EyeOff className="text-denim-900" />
-                )}
-              </Button>
-            )}
-            <Button disabled={encrypted} onClick={() => handleCopyToClipBoard(vaultData.password)} className="bg-denim-50 hover:bg-denim-100 cursor-pointer">
+            <Button disabled={vaultData.encrypted} onClick={handleShowPassword} className="bg-denim-50 me-2 hover:bg-denim-100 cursor-pointer">
+              {showPassword ? (
+                <Eye className="text-denim-900" />
+              ) : (
+                <EyeOff className="text-denim-900" />
+              )}
+            </Button>
+            <Button disabled={vaultData.encrypted} onClick={() => handleCopyToClipBoard(vaultData.password)} className="bg-denim-50 hover:bg-denim-100 cursor-pointer">
               <Copy className="text-denim-900" />
             </Button>
           </div>

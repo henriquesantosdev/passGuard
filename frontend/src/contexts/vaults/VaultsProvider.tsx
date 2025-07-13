@@ -2,7 +2,8 @@ import { api } from "@/api/axios"
 import { CreateVaultType, UpdateVaultType, Vault, VaultsContext, VaultsInfo } from "./vaultsContext"
 import { ReactNode, useCallback, useState } from "react"
 import { checkPasswordStrength } from "@/utils/checkPasswordStrength"
-import { encryptPassword } from "@/utils/crypto"
+import { decryptPassword, encryptPassword } from "@/utils/crypto"
+import { verifyPassphrase } from "@/utils/verifyPassphrase"
 
 interface VaultsProviderProps {
   children: ReactNode
@@ -13,12 +14,16 @@ const VaultsProvider = ({ children }: VaultsProviderProps) => {
   const [vaultsInfo, setVaultsInfo] = useState<VaultsInfo | undefined>(undefined)
   const [getVaultsInfoLoading, setGetVaultsInfoLoading] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [encrypted, setEncrypted] = useState(true)
 
   const getVaults = useCallback(() => {
     setLoading(true);
 
     api.get("/vaults")
       .then((response) => {
+        response.data.map(async (vault: Vault) => {
+          vault.encrypted = true
+        });
         setVaults(response.data);
       })
       .catch((error) => {
@@ -40,7 +45,7 @@ const VaultsProvider = ({ children }: VaultsProviderProps) => {
       username: data.username,
       service_name: data.service_name
     }).then((response) => {
-      console.log(response)
+      response.data.vault.encrypted = true
       setVaults([...vaults, response.data.vault])
     }).catch((error) => {
       console.log(error)
@@ -94,7 +99,7 @@ const VaultsProvider = ({ children }: VaultsProviderProps) => {
     }
 
     const passwordsChecked = new Set<string>()
-    
+
     vaults.forEach(vault => {
       vaultsPasswordInfo.savedVaults++
       const passwordStrength = checkPasswordStrength(vault.password)
@@ -117,6 +122,54 @@ const VaultsProvider = ({ children }: VaultsProviderProps) => {
     setGetVaultsInfoLoading(false)
   }, [vaults])
 
+  const decryptVaults = async (passphraseEncrypted: string, passphrase: string) => {
+
+    try {
+      const passphraseVeify = await verifyPassphrase(passphraseEncrypted, passphrase)
+
+      if (!passphraseVeify) return
+
+      const decryptedVaults = await Promise.all(vaults.map(async (vault) => {
+        const decryptedPassword = await decryptPassword(vault.password, passphrase)
+
+        if (vault.encrypted === false) return vault
+
+        return {
+          ...vault,
+          password: decryptedPassword,
+          encrypted: false
+        }
+      }));
+
+      setVaults(decryptedVaults)
+      setEncrypted(false)
+    } catch {
+      console.log('wrong passphrase')
+    }
+  }
+
+  const decryptVault = async (vaultId: string, passphrase: string) => {
+    try {
+      const newVaults = await Promise.all(vaults.map(async vault => {
+        if (vault.id === vaultId) {
+          const decryptedPassword = await decryptPassword(vault.password, passphrase)
+          console.log(decryptPassword)
+          return {
+            ...vault,
+            password: decryptedPassword,
+            encrypted: false
+          }
+        }
+        return vault
+      }))
+
+      console.log(newVaults)
+      setVaults(newVaults)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   return (
     <VaultsContext.Provider
       value={{
@@ -125,7 +178,10 @@ const VaultsProvider = ({ children }: VaultsProviderProps) => {
         deleteVault,
         updateVault,
         getVaultsInfo,
+        decryptVaults,
+        decryptVault,
         vaultsInfo,
+        encrypted,
         getVaultsInfoLoading,
         loading,
         vaults

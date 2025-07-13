@@ -3,6 +3,7 @@ import { createContext } from "react";
 export interface Vault {
   id: string;
   'service_name': string;
+  encrypted: boolean;
   password: string;
   username: string;
   created_at: string;
@@ -15,6 +16,9 @@ export interface VaultContextType {
   deleteVault: (vaultId: string) => void;
   updateVault: (vaultData: UpdateVaultType, vaultId: string) => void;
   getVaultsInfo: () => void;
+  decryptVaults: (passphraseEncrypted: string, passphrase: string) => void,
+  decryptVault: (vaultId: string, passphrase:string) => void;
+  encrypted: boolean
   vaultsInfo: VaultsInfo | undefined;
   loading: boolean;
   getVaultsInfoLoading: boolean;

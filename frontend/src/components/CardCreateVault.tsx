@@ -201,7 +201,7 @@ export const CardCreateVault = ({ children }: CardCreateVaultProps) => {
                 type={showSecureKey}
                 className="h-12"
                 id="passphrase"
-                placeholder="Your secure text" />
+                placeholder="Insert your passphrase" />
               <Button
                 onClick={handleShowSecureKey}
                 type="button"

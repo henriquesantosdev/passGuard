@@ -5,12 +5,15 @@ import { Header } from "@/components/Header"
 import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
 import { useVaults } from "@/contexts/hooks/useVaults"
-import { BicepsFlexed, Plus, Repeat, Shield } from "lucide-react"
+import { BicepsFlexed, KeyRound, Package, Plus, Repeat, Shield } from "lucide-react"
 import { useEffect } from "react"
 import { ToastContainer } from "react-toastify"
+import { CardDecryptVaults } from "@/components/CardDecryptVaults"
+import { useAuth } from "@/contexts/hooks/useAuth"
 
 export const Dashboard = () => {
   const { getVaults, loading, vaults } = useVaults()
+  const { user } = useAuth()
 
   useEffect(() => {
     getVaults()
@@ -27,17 +30,26 @@ export const Dashboard = () => {
         <div className="mt-4 bg-denim-900 p-6 rounded-md">
 
           <div className="text-2xl font-bold text-white mb-6 flex items-center justify-between">
+            
             <div className="flex gap-2 items-center">
               <Shield className="size-8 text-white" />
               My Vaults
             </div>
 
             {vaults.length > 0 && (
-              <CardCreateVault>
-                <Button className="bg-white text-denim-900 hover:cursor-pointer hover:bg-white/90 hover:text-denim-900">
-                  <Plus />Storage a new password
-                </Button>
-              </CardCreateVault>
+              <div className="flex gap-2">
+                <CardDecryptVaults passphrase={user?.passphrase}>
+                  <Button className="bg-white text-denim-900 hover:cursor-pointer hover:bg-white/90 hover:text-denim-900">
+                    <KeyRound /> Decrypt vaults
+                  </Button>
+                </CardDecryptVaults>
+
+                <CardCreateVault>
+                  <Button className="bg-white text-denim-900 hover:cursor-pointer hover:bg-white/90 hover:text-denim-900">
+                    <Package /> Storage a new password
+                  </Button>
+                </CardCreateVault>
+              </div>
             )}
 
           </div>
@@ -70,14 +82,14 @@ export const Dashboard = () => {
           <div className="bg-denim-700 w-6/12 rounded-md mt-4">
 
             <h2 className="text-2xl font-bold text-denim-50 p-4 flex items-center gap-4">
-              <Repeat className="size-8"/>
+              <Repeat className="size-8" />
               Password generator</h2>
           </div>
 
           <div className="bg-denim-700 w-6/12 rounded-md mt-4">
 
             <h2 className="text-2xl font-bold text-denim-50 p-4 flex items-center gap-4">
-              <BicepsFlexed className="size-8"/>
+              <BicepsFlexed className="size-8" />
               Password strength test</h2>
           </div>
         </div>

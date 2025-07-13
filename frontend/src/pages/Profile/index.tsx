@@ -9,8 +9,6 @@ import { ToastContainer } from "react-toastify"
 export const Profile = () => {
   const { user, loading } = useAuth()
 
-  console.log(user)
-
   return (
     <main>
       {loading ? (
