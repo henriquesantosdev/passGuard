@@ -11,6 +11,7 @@ import { Label } from "./ui/label"
 // import { decryptPassword } from "@/utils/crypto"
 import { Bounce, toast } from "react-toastify"
 import { useVaults } from "@/contexts/hooks/useVaults"
+import { decryptPassword } from "@/utils/crypto"
 
 interface CardCreateVaultProps {
   children: ReactElement,
@@ -45,7 +46,13 @@ export const CardDecryptVault = ({ children, passphrase, vaultId }: CardCreateVa
 
   const onSubmit = async (data: { password: string, passphrase: string }) => {
     try {
-      // await decryptPassword(data.password, data.passphrase)
+
+      const passwordCheck = await decryptPassword(data.password, data.passphrase)
+
+      if (!passwordCheck) {
+        return
+      }
+
       decryptVault(vaultId, data.passphrase)
 
       toast.success('Passwords Decrypted!', {
@@ -106,7 +113,7 @@ export const CardDecryptVault = ({ children, passphrase, vaultId }: CardCreateVa
                 disabled
               />
             </div>
-          </div>  
+          </div>
 
           <div>
             <Label className="text-black/40 mt-2" htmlFor="passphrase">

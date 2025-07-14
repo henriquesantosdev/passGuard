@@ -129,11 +129,15 @@ const VaultsProvider = ({ children }: VaultsProviderProps) => {
 
       if (!passphraseVeify) return
 
-      const decryptedVaults = await Promise.all(vaults.map(async (vault) => {
+      const decryptedVaults = await Promise.all(vaults.map(async vault => {
+        
+        if (vault.encrypted === false) {
+          console.log('false -> passou por', vault)
+          return vault
+        }
+        
         const decryptedPassword = await decryptPassword(vault.password, passphrase)
-
-        if (vault.encrypted === false) return vault
-
+        console.log('true -> passou por', vault)
         return {
           ...vault,
           password: decryptedPassword,
@@ -143,8 +147,9 @@ const VaultsProvider = ({ children }: VaultsProviderProps) => {
 
       setVaults(decryptedVaults)
       setEncrypted(false)
-    } catch {
-      console.log('wrong passphrase')
+    } catch (error) {
+      console.log('Decrypt vaults')
+      console.log(error)
     }
   }
 
@@ -153,19 +158,21 @@ const VaultsProvider = ({ children }: VaultsProviderProps) => {
       const newVaults = await Promise.all(vaults.map(async vault => {
         if (vault.id === vaultId) {
           const decryptedPassword = await decryptPassword(vault.password, passphrase)
-          console.log(decryptPassword)
+
           return {
             ...vault,
             password: decryptedPassword,
             encrypted: false
           }
+        } else {
+          return vault
         }
-        return vault
       }))
 
       console.log(newVaults)
       setVaults(newVaults)
     } catch (error) {
+      console.log('Decrypt vault')
       console.log(error)
     }
   }

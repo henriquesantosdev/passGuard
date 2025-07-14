@@ -29,6 +29,7 @@ export const CardDecryptVaults = ({ children, passphrase }: CardCreateVaultProps
   const { decryptVaults } = useVaults()
 
   const [showSecureKey, setShowSecureKey] = useState<'password' | 'text'>('password')
+  const [open, setOpen] = useState(false)
 
   const handleShowSecureKey = () => {
     if (showSecureKey === 'password') {
@@ -44,8 +45,19 @@ export const CardDecryptVaults = ({ children, passphrase }: CardCreateVaultProps
 
   const onSubmit = async (data: { password: string, passphrase: string }) => {
     try {
-      await decryptPassword(data.password, data.passphrase)
+      const passwordCheck = await decryptPassword(data.password, data.passphrase)
+
+      if (!passwordCheck) {
+        return
+      }
+
       decryptVaults(data.password, data.passphrase)
+
+      if (open) {
+        setOpen(false)
+      } else {
+        setOpen(true)
+      }
 
       toast.success('Passwords Decrypted!', {
         position: "top-right",
@@ -68,7 +80,7 @@ export const CardDecryptVaults = ({ children, passphrase }: CardCreateVaultProps
   }
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger>
         {children}
       </DialogTrigger>
@@ -105,7 +117,7 @@ export const CardDecryptVaults = ({ children, passphrase }: CardCreateVaultProps
                 disabled
               />
             </div>
-          </div>  
+          </div>
 
           <div>
             <Label className="text-black/40 mt-2" htmlFor="passphrase">
