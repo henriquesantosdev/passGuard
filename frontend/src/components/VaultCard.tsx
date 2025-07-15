@@ -25,7 +25,7 @@ export const VaultCard = ({ vaultData }: VaultDataInterface) => {
     navigator.clipboard.writeText(password)
 
     toast.success('password copied to clipboard!', {
-      position: "bottom-right",
+      position: "top-right",
       autoClose: 2000,
       hideProgressBar: true,
       closeOnClick: true,

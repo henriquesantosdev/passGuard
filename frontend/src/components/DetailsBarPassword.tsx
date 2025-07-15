@@ -11,7 +11,7 @@ export const DetailsBarPassword = () => {
   }, [getVaultsInfo])
 
   return (
-    <>
+    <div>
       {getVaultsInfoLoading ? (
         <div className="bg-white p-4 rounded-md mt-16 grid grid-cols-4 gap-2">
           <Skeleton className="w-full h-20" />
@@ -20,7 +20,7 @@ export const DetailsBarPassword = () => {
           <Skeleton className="w-full h-20" />
         </div>
       ) : (
-        <div className="bg-white p-4 rounded-md mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2">
+        <div className="bg-white p-4 rounded-md mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2 backdrop-blur-lg">
           <div className="bg-denim-100/50 p-4 rounded-md text-denim-900">
             <div className="flex gap-2 items-center">
               <div className="w-2 h-2 bg-denim-900 rounded-full"></div>
@@ -54,6 +54,6 @@ export const DetailsBarPassword = () => {
           </div>
         </div>
       )}
-    </>
+    </div>
   )
 }

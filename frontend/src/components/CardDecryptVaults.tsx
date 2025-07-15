@@ -59,7 +59,7 @@ export const CardDecryptVaults = ({ children, passphrase }: CardCreateVaultProps
         setOpen(true)
       }
 
-      toast.success('Passwords Decrypted!', {
+      toast.success('Vaults Decrypted!', {
         position: "top-right",
         autoClose: 2000,
         hideProgressBar: true,

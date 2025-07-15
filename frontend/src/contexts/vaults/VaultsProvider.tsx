@@ -15,6 +15,7 @@ const VaultsProvider = ({ children }: VaultsProviderProps) => {
   const [getVaultsInfoLoading, setGetVaultsInfoLoading] = useState(false)
   const [loading, setLoading] = useState(false)
   const [encrypted, setEncrypted] = useState(true)
+  const [showPasswordStatus, setShowPasswordStatus] = useState(false)
 
   const getVaults = useCallback(() => {
     setLoading(true);
@@ -147,6 +148,7 @@ const VaultsProvider = ({ children }: VaultsProviderProps) => {
 
       setVaults(decryptedVaults)
       setEncrypted(false)
+      setShowPasswordStatus(true)
     } catch (error) {
       console.log('Decrypt vaults')
       console.log(error)
@@ -171,6 +173,7 @@ const VaultsProvider = ({ children }: VaultsProviderProps) => {
 
       console.log(newVaults)
       setVaults(newVaults)
+      setShowPasswordStatus(true)
     } catch (error) {
       console.log('Decrypt vault')
       console.log(error)
@@ -187,6 +190,7 @@ const VaultsProvider = ({ children }: VaultsProviderProps) => {
         getVaultsInfo,
         decryptVaults,
         decryptVault,
+        showPasswordStatus,
         vaultsInfo,
         encrypted,
         getVaultsInfoLoading,

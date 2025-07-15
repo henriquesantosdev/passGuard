@@ -28,6 +28,7 @@
     "clsx": "^2.1.1",
     "crypto-js": "^4.2.0",
     "lucide-react": "^0.482.0",
+    "motion": "^12.23.5",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.54.2",

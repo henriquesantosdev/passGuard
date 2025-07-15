@@ -19,6 +19,7 @@ export interface VaultContextType {
   decryptVaults: (passphraseEncrypted: string, passphrase: string) => void,
   decryptVault: (vaultId: string, passphrase:string) => void;
   encrypted: boolean
+  showPasswordStatus: boolean
   vaultsInfo: VaultsInfo | undefined;
   loading: boolean;
   getVaultsInfoLoading: boolean;

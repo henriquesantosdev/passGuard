@@ -5,14 +5,14 @@ import { Header } from "@/components/Header"
 import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
 import { useVaults } from "@/contexts/hooks/useVaults"
-import { BicepsFlexed, KeyRound, Package, Plus, Repeat, Shield } from "lucide-react"
+import { KeyRound, Lock, Package, Plus, Shield } from "lucide-react"
 import { useEffect } from "react"
 import { ToastContainer } from "react-toastify"
 import { CardDecryptVaults } from "@/components/CardDecryptVaults"
 import { useAuth } from "@/contexts/hooks/useAuth"
 
 export const Dashboard = () => {
-  const { getVaults, loading, vaults } = useVaults()
+  const { getVaults, loading, vaults, showPasswordStatus } = useVaults()
   const { user } = useAuth()
 
   useEffect(() => {
@@ -25,12 +25,20 @@ export const Dashboard = () => {
       <div className="w-full lg:max-w-8/12 mx-auto">
         <Header />
 
-        <DetailsBarPassword />
+        {(showPasswordStatus) ?
+          (
+            <DetailsBarPassword />
+          ) :
+          (
+            <div className="bg-red-200 mt-6 p-6 text-xl text-red-900 font-semibold flex gap-3 items-center rounded-md">
+              <Lock className="size-7 text-red-900" />
+              Decrypt your vaults to view the strength statistics.
+            </div>
+          )}
 
-        <div className="mt-4 bg-denim-900 p-6 rounded-md">
-
+        <div className="mt-6 bg-denim-900 p-6 rounded-md">
           <div className="text-2xl font-bold text-white mb-6 flex items-center justify-between">
-            
+
             <div className="flex gap-2 items-center">
               <Shield className="size-8 text-white" />
               My Vaults
@@ -77,23 +85,7 @@ export const Dashboard = () => {
             )}
           </div>
         </div>
-
-        <div className="flex gap-4">
-          <div className="bg-denim-700 w-6/12 rounded-md mt-4">
-
-            <h2 className="text-2xl font-bold text-denim-50 p-4 flex items-center gap-4">
-              <Repeat className="size-8" />
-              Password generator</h2>
-          </div>
-
-          <div className="bg-denim-700 w-6/12 rounded-md mt-4">
-
-            <h2 className="text-2xl font-bold text-denim-50 p-4 flex items-center gap-4">
-              <BicepsFlexed className="size-8" />
-              Password strength test</h2>
-          </div>
-        </div>
       </div>
-    </div>
+    </div >
   )
 }
