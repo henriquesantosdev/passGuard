@@ -8,6 +8,7 @@ export interface Vault {
   username: string;
   created_at: string;
   email: string;
+  passwordStrength?: string
 }
 
 export interface VaultContextType {

@@ -85,6 +85,21 @@ export const VaultCard = ({ vaultData }: VaultDataInterface) => {
           <p>{vaultData?.username == "" ? 'Username not defined' : vaultData?.username}</p>
         </div>
 
+        <div className="mt-3 mb-4">
+
+          {(vaultData?.passwordStrength === 'strong') && (
+            <span className="bg-green-200/50 text-green-700 p-1 px-4 rounded-full mt-2">
+              Strong password
+            </span>
+          )}
+
+          {(vaultData?.passwordStrength === 'weak') && (
+            <span className="bg-red-100/50 text-red-700 p-1 px-4 rounded-full mt-2">
+              Weak password
+            </span>
+          )}
+        </div>
+
         <div className="mt-2 flex text-denim-900 items-center justify-between w-full gap-2 border border-denim-100 rounded-md p-2">
           <div className="flex items-center gap-2 text-ellipsis">
             <Lock className="size-4" />
