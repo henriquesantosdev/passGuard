@@ -1,3 +1,4 @@
+import { Footer } from "@/components/Footer"
 import { Header } from "@/components/Header"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
@@ -17,9 +18,9 @@ export const Profile = () => {
           <h2 className="text-2xl">Loading...</h2>
         </div>
       ) : (
-        <div className="bg-arapawa-50 min-h-screen p-4">
+        <div className="bg-arapawa-50 min-h-screen justify-between flex flex-col">
+          <div className="w-full lg:max-w-8/12 mx-auto mt-4">
           <ToastContainer />
-          <div className="w-full lg:max-w-8/12 mx-auto">
 
             <Header />
 
@@ -48,6 +49,8 @@ export const Profile = () => {
             </div>
 
           </div>
+
+          <Footer/>
         </div>
       )}
     </main >
