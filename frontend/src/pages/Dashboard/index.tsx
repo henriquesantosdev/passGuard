@@ -6,14 +6,16 @@ import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
 import { useVaults } from "@/contexts/hooks/useVaults"
 import { KeyRound, Lock, Package, Plus, Shield } from "lucide-react"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { ToastContainer } from "react-toastify"
 import { CardDecryptVaults } from "@/components/CardDecryptVaults"
 import { useAuth } from "@/contexts/hooks/useAuth"
 import { Footer } from "@/components/Footer"
+import { Input } from "@/components/ui/input"
 
 export const Dashboard = () => {
   const { getVaults, loading, vaults, showPasswordStatus } = useVaults()
+  const [searchByName, setSearchByName] = useState('')
   const { user } = useAuth()
 
   useEffect(() => {
@@ -39,23 +41,34 @@ export const Dashboard = () => {
             )}
 
           <div className="mt-6 bg-denim-900 p-6 rounded-md">
-            <div className="text-2xl font-bold text-white mb-6 flex items-center justify-between">
+            <div className="text-2xl font-bold text-white mb-6 flex items-center justify-between gap-8">
 
-              <div className="flex gap-2 items-center">
-                <Shield className="size-8 text-white" />
-                My Vaults
+              <div className="flex gap-6 justify-between w-full">
+                <div className="flex gap-2 items-center">
+                  <Shield className="size-8 text-white" />
+                  <span className="text-nowrap">My Vaults</span>
+                </div>
+
+
+
+                <Input
+                  onChange={(e) => setSearchByName(e.currentTarget.value)}
+                  className="w-full placeholder:text-white/60" type="text"
+                  placeholder="Search vault"
+                />
               </div>
+
 
               {vaults.length > 0 && (
                 <div className="flex gap-2">
                   <CardDecryptVaults passphrase={user?.passphrase}>
-                    <Button className="bg-white text-denim-900 hover:cursor-pointer hover:bg-white/90 hover:text-denim-900">
+                    <Button className="p-6 bg-white text-denim-900 hover:cursor-pointer hover:bg-white/90 hover:text-denim-900">
                       <KeyRound /> Decrypt vaults
                     </Button>
                   </CardDecryptVaults>
 
                   <CardCreateVault>
-                    <Button className="bg-white text-denim-900 hover:cursor-pointer hover:bg-white/90 hover:text-denim-900">
+                    <Button className="bg-white text-denim-900 hover:cursor-pointer hover:bg-white/90 hover:text-denim-900 p-6">
                       <Package /> Storage a new password
                     </Button>
                   </CardCreateVault>
@@ -72,9 +85,13 @@ export const Dashboard = () => {
                 </>
               ) : (
                 <>
-                  {vaults.length > 0
+                  {vaults
                     ?
-                    vaults.map((vault) => <VaultCard key={vault.id} vaultData={vault} />)
+                    vaults.filter(
+                      (vault) => vault.service_name
+                        .toLowerCase().
+                        includes(searchByName)
+                    ).map((vault) => <VaultCard key={vault.id} vaultData={vault} />)
                     :
                     <CardCreateVault>
                       <div className="w-full h-32 bg-none border-2 rounded-md flex items-center justify-center gap-2 font-semibold text-white hover:cursor-pointer hover:bg-white/20">

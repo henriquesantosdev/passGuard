@@ -131,11 +131,11 @@ const VaultsProvider = ({ children }: VaultsProviderProps) => {
       if (!passphraseVeify) return
 
       const decryptedVaults = await Promise.all(vaults.map(async vault => {
-        
+
         if (vault.encrypted === false) return vault
-        
+
         const decryptedPassword = await decryptPassword(vault.password, passphrase)
-        
+
         const passwordStrength = checkPasswordStrength(decryptedPassword)
 
         return {

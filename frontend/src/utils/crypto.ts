@@ -38,7 +38,7 @@ async function deriveKey(masterPassword: string, salt: Uint8Array): Promise<Cryp
 export async function encryptPassword(password: string, masterPassword: string): Promise<string> {
   const encoder = new TextEncoder();
   const salt = crypto.getRandomValues(new Uint8Array(16));
-  const iv = crypto.getRandomValues(new Uint8Array(12)); // Initialization Vector
+  const iv = crypto.getRandomValues(new Uint8Array(12));
 
   const key = await deriveKey(masterPassword, salt);
   const encrypted = await crypto.subtle.encrypt(
