@@ -121,6 +121,7 @@ export const VaultConfigDialog = ({ vaultData }: VaultDataInterface) => {
             </Label>
             <div className="flex items-center gap-2 mt-2">
               <Input
+                autoComplete="off"
                 {...register('password')}
                 type={showPasswordDialog}
                 className="h-12"

@@ -85,7 +85,7 @@ export const Dashboard = () => {
                 </>
               ) : (
                 <>
-                  {vaults
+                  {vaults.length
                     ?
                     vaults.filter(
                       (vault) => vault.service_name

@@ -105,6 +105,7 @@ export const CardDecryptVault = ({ children, passphrase, vaultId }: CardCreateVa
             </Label>
             <div className="flex items-center gap-2 mt-2">
               <Input
+                autoComplete="off"
                 {...register('password')}
                 className="h-12"
                 id="password"

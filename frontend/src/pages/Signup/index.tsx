@@ -83,6 +83,7 @@ export const Signup = () => {
             <div className="flex gap-2 items-center mb-1">
               <div className="relative w-full">
                 <Input
+                  autoComplete="off"
                   {...register('password')}
                   placeholder="Enter your password"
                   type={showPassword}
@@ -106,6 +107,7 @@ export const Signup = () => {
           <div className="mt-4 mb-4">
             <div className="relative mb-1">
               <Input
+                autoComplete="off"
                 {...register('confirmPassword')}
                 placeholder="Confirm your password"
                 type={showPassword}
@@ -120,6 +122,7 @@ export const Signup = () => {
             <div className="flex gap-2 items-center mb-1">
               <div className="relative w-full">
                 <Input
+                  autoComplete="off"
                   {...register('passphrase')}
                   placeholder="Enter your passphrase"
                   type={showPassphrase}

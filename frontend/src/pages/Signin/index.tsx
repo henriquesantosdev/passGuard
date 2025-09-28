@@ -90,6 +90,7 @@ export const Signin = () => {
             <div className="flex gap-2 items-center mb-1">
               <div className="relative w-full">
                 <Input
+                  autoComplete="off"
                   {...register('password')}
                   placeholder="Enter your password"
                   type={showPassword}

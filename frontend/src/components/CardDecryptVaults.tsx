@@ -125,6 +125,7 @@ export const CardDecryptVaults = ({ children, passphrase }: CardCreateVaultProps
             </Label>
             <div className="flex items-center gap-2 mt-2">
               <Input
+                autoComplete="off"
                 {...register('passphrase')}
                 type={showSecureKey}
                 className="h-12"

@@ -107,6 +107,7 @@ export const CardDecryptPassword = ({ children, setEncrypted, vaultData, setPass
             </Label>
             <div className="flex items-center gap-2 mt-2">
               <Input
+                autoComplete="off"
                 {...register('password')}
                 type={showPassword}
                 className="h-12"

@@ -146,6 +146,7 @@ export const CardCreateVault = ({ children }: CardCreateVaultProps) => {
                 <UserRound className="size-4" /> Username: (optional)
               </Label>
               <Input
+                autoComplete="off"
                 {...register('username')}
                 className="h-12 mt-2"
                 id="username"
@@ -159,6 +160,7 @@ export const CardCreateVault = ({ children }: CardCreateVaultProps) => {
               <Briefcase className="size-4" />Service name:
             </Label>
             <Input
+              autoComplete="off"
               {...register('service_name')}
               className="h-12 mt-2"
               id="service_name"
@@ -172,6 +174,7 @@ export const CardCreateVault = ({ children }: CardCreateVaultProps) => {
             </Label>
             <div className="flex items-center gap-2 mt-2">
               <Input
+                autoComplete="off"
                 {...register('password')}
                 type={showPassword}
                 className="h-12"
@@ -197,6 +200,7 @@ export const CardCreateVault = ({ children }: CardCreateVaultProps) => {
             </Label>
             <div className="flex items-center gap-2 mt-2">
               <Input
+                autoComplete="off"
                 {...register('passphrase')}
                 type={showSecureKey}
                 className="h-12"
