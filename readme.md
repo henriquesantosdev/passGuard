@@ -3,6 +3,8 @@
 ![Decripted vaults page](https://henriquesantosdev.com/passguard-02.png)
 ![no decripted vaults page](https://henriquesantosdev.com/passguard-03.png)
 ![profile page](https://henriquesantosdev.com/passguard-01.png)
+![profile page](https://henriquesantosdev.com/passguard-signin.png)
+![profile page](https://henriquesantosdev.com/passguard-signup.png)
 
 [English](#-english-version) | [Português](#-versão-em-português)
 
