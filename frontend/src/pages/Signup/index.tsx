@@ -63,7 +63,7 @@ export const Signup = () => {
         <form className="w-full md:w-6/12" onSubmit={handleSubmit(onSubmit)}>
           <div>
             <h3 className="text-3xl text-[#6BBCFF] font-bold flex gap-2 mb-4"><img className="w-[40px]" src={passguarLogo} alt="" /> passGuard</h3>
-            <p className="text-arapawa-950 text-xl font-normal">Gerencie suas senhas com segurança e praticidade</p>
+            <p className="text-arapawa-950 text-xl font-normal">Manage your passwords securely and conveniently</p>
           </div>
 
           <div className="mt-6">
