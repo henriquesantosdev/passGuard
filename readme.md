@@ -1,5 +1,9 @@
 # 🔐 passGuard
 
+![Logo do Projeto](https://henriquesantosdev.com/passguard-01.png)
+![Logo do Projeto](https://henriquesantosdev.com/passguard-02.png)
+![Logo do Projeto](https://henriquesantosdev.com/passguard-03.png)
+
 [English](#-english-version) | [Português](#-versão-em-português)
 
 ---
